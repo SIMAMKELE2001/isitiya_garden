@@ -63,6 +63,18 @@ abstract final class AppTheme {
           textStyle: buttonText,
         ),
       ),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: Colors.white,
+        indicatorColor: const Color(0xFFCFE6B8),
+        height: 72,
+        labelTextStyle: const WidgetStatePropertyAll(
+          TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
+            color: AppColors.ink,
+          ),
+        ),
+      ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: Colors.white,

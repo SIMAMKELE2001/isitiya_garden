@@ -13,6 +13,8 @@ class AppTextField extends StatelessWidget {
     this.textInputAction,
     this.obscureText = false,
     this.maxLines = 1,
+    this.suffix,
+    this.autofillHints,
   });
 
   final String label;
@@ -23,6 +25,8 @@ class AppTextField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final bool obscureText;
   final int maxLines;
+  final Widget? suffix;
+  final Iterable<String>? autofillHints;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +46,8 @@ class AppTextField extends StatelessWidget {
           textInputAction: textInputAction,
           obscureText: obscureText,
           maxLines: maxLines,
-          decoration: InputDecoration(hintText: hint),
+          autofillHints: autofillHints,
+          decoration: InputDecoration(hintText: hint, suffixIcon: suffix),
         ),
       ],
     );

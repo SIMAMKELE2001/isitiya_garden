@@ -34,6 +34,14 @@ class Produce {
     required this.farmerName,
     this.description,
     this.imagePath,
+    this.farmName,
+    this.farmerPhone,
+    this.whatsappNumber,
+    this.buyerTypes = const [],
+    this.availableFrom,
+    this.availableUntil,
+    this.locationNote,
+    this.createdAt,
   });
 
   final String id;
@@ -48,6 +56,14 @@ class Produce {
   final String farmerName;
   final String? description;
   final String? imagePath;
+  final String? farmName;
+  final String? farmerPhone;
+  final String? whatsappNumber;
+  final List<String> buyerTypes;
+  final DateTime? availableFrom;
+  final DateTime? availableUntil;
+  final String? locationNote;
+  final DateTime? createdAt;
 
   /// "40" instead of "40.0".
   String get quantityLabel =>
@@ -60,6 +76,9 @@ class Produce {
     final amount = p.toStringAsFixed(p % 1 == 0 ? 0 : 2);
     return 'R$amount per $unit${isPriceNegotiable ? ' · negotiable' : ''}';
   }
+
+  static DateTime? _date(Object? value) =>
+      value is String ? DateTime.tryParse(value) : null;
 
   /// Builds a Produce from the map Supabase returns for one row.
   factory Produce.fromJson(Map<String, dynamic> json) => Produce(
@@ -75,5 +94,16 @@ class Produce {
         farmerName: json['farmer_name'] as String,
         description: json['description'] as String?,
         imagePath: json['image_path'] as String?,
+        farmName: json['farm_name'] as String?,
+        farmerPhone: json['farmer_phone'] as String?,
+        whatsappNumber: json['whatsapp_number'] as String?,
+        buyerTypes: [
+          for (final t in (json['buyer_types'] as List<dynamic>? ?? const []))
+            t as String,
+        ],
+        availableFrom: _date(json['available_from']),
+        availableUntil: _date(json['available_until']),
+        locationNote: json['location_note'] as String?,
+        createdAt: _date(json['created_at']),
       );
 }
