@@ -86,7 +86,7 @@ class ProduceCard extends StatelessWidget {
                       FilledButton(
                         onPressed: onTap,
                         style: FilledButton.styleFrom(
-                          minimumSize: const Size.fromHeight(44),
+                          minimumSize: const Size.fromHeight(48),
                         ),
                         child: const Text('View produce'),
                       ),

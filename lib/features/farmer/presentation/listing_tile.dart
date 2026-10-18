@@ -137,7 +137,7 @@ class ListingTile extends ConsumerWidget {
                   onPressed: () => openListingForm(context, existing: l),
                   icon: const Icon(Icons.edit_outlined),
                   label: const Text('Edit'),
-                  style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(44)),
+                  style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
                 ),
               ),
               const SizedBox(width: 8),

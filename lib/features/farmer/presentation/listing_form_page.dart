@@ -39,7 +39,7 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
   late final _description =
       TextEditingController(text: widget.existing?.description);
   late final _quantity = TextEditingController(
-      text: widget.existing == null ? null : widget.existing!.quantityLabel);
+      text: widget.existing?.quantityLabel);
   late final _price = TextEditingController(text: _priceText(widget.existing?.price));
   late final _note = TextEditingController(text: widget.existing?.locationNote);
 
@@ -47,7 +47,7 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
   late int? _unitId = widget.existing?.unitId;
   late int? _communityId = widget.existing?.communityId ??
       ref.read(currentProfileProvider).value?.communityId;
-  late Set<int> _buyerTypeIds = {...?widget.existing?.buyerTypeIds};
+  late final Set<int> _buyerTypeIds = {...?widget.existing?.buyerTypeIds};
   late bool _negotiable = widget.existing?.isPriceNegotiable ?? false;
   late AvailabilityStatus _status =
       widget.existing?.status ?? AvailabilityStatus.available;
