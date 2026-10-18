@@ -8,7 +8,7 @@ import '../features/auth/presentation/login_page.dart';
 import '../features/auth/presentation/onboarding_page.dart';
 import '../features/auth/presentation/splash_page.dart';
 import '../features/buyer/presentation/buyer_shell.dart';
-import '../features/farmer/presentation/farmer_home_page.dart';
+import '../features/farmer/presentation/farmer_shell.dart';
 import 'theme/app_theme.dart';
 
 /// The root widget of the whole application.
@@ -85,7 +85,7 @@ class _AppGateState extends ConsumerState<AppGate> {
       data: (p) {
         if (p != null) {
           return p.role == UserRole.farmer
-              ? const FarmerHomePage()
+              ? const FarmerShell()
               : const BuyerShell();
         }
         if (!_onboardingSeen) {
