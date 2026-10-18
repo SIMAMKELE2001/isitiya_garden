@@ -27,12 +27,12 @@ class UserProfile {
   String get firstName => fullName.trim().split(' ').first;
 
   factory UserProfile.fromJson(Map<String, dynamic> json) => UserProfile(
-        id: json['id'] as String,
-        role: UserRole.fromDb(json['role'] as String),
-        fullName: json['full_name'] as String,
-        phone: json['phone'] as String,
-        communityId: json['community_id'] as int?,
-      );
+    id: json['id'] as String,
+    role: UserRole.fromDb(json['role'] as String),
+    fullName: json['full_name'] as String,
+    phone: json['phone'] as String,
+    communityId: json['community_id'] as int?,
+  );
 }
 
 /// The buyer-only details: which buyer type they chose (FR18).

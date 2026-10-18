@@ -1,5 +1,6 @@
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
 import '../../auth/models/user_profile.dart';
 import '../../produce/models/produce.dart';
 import '../models/farmer_models.dart';
@@ -20,7 +21,8 @@ class FarmerRepository {
     final rows = await _client
         .from('produce_listings')
         .select(
-            '*, categories(name), units(name), communities(name), listing_buyer_types(buyer_type_id)')
+          '*, categories(name), units(name), communities(name), listing_buyer_types(buyer_type_id)',
+        )
         .eq('farmer_id', userId)
         .order('created_at', ascending: false);
     return rows.map<FarmerListing>((r) => FarmerListing.fromJson(r)).toList();
@@ -43,7 +45,10 @@ class FarmerRepository {
   }
 
   Future<void> updateListing(FarmerListing old, ListingInput input) async {
-    await _client.from('produce_listings').update(input.toRow()).eq('id', old.id);
+    await _client
+        .from('produce_listings')
+        .update(input.toRow())
+        .eq('id', old.id);
 
     // Only change the buyer types that actually differ.
     final before = old.buyerTypeIds.toSet();
@@ -70,14 +75,16 @@ class FarmerRepository {
   Future<void> setAvailability(String id, AvailabilityStatus status) async {
     await _client
         .from('produce_listings')
-        .update({'availability_status': status.name}).eq('id', id);
+        .update({'availability_status': status.name})
+        .eq('id', id);
   }
 
   /// FR16: deactivate (hide) or reactivate a listing.
   Future<void> setActive(String id, bool active) async {
     await _client
         .from('produce_listings')
-        .update({'is_active': active}).eq('id', id);
+        .update({'is_active': active})
+        .eq('id', id);
   }
 
   // ---------- Photos (FR06) ----------
@@ -90,8 +97,8 @@ class FarmerRepository {
     final (ext, type) = name.endsWith('.png')
         ? ('png', 'image/png')
         : name.endsWith('.webp')
-            ? ('webp', 'image/webp')
-            : ('jpg', 'image/jpeg');
+        ? ('webp', 'image/webp')
+        : ('jpg', 'image/jpeg');
     final path = '$userId/${DateTime.now().millisecondsSinceEpoch}.$ext';
     await _client.storage
         .from(_bucket)
@@ -126,21 +133,30 @@ class FarmerRepository {
     String? whatsappNumber,
     String? about,
   }) async {
-    await _client.from('profiles').update({
-      'full_name': fullName.trim(),
-      'phone': phone.trim(),
-      'community_id': communityId,
-    }).eq('id', userId);
-    await _client.from('farmer_profiles').update({
-      'farm_name': farmName.trim(),
-      'whatsapp_number': whatsappNumber,
-      'about': about,
-    }).eq('id', userId);
+    await _client
+        .from('profiles')
+        .update({
+          'full_name': fullName.trim(),
+          'phone': phone.trim(),
+          'community_id': communityId,
+        })
+        .eq('id', userId);
+    await _client
+        .from('farmer_profiles')
+        .update({
+          'farm_name': farmName.trim(),
+          'whatsapp_number': whatsappNumber,
+          'about': about,
+        })
+        .eq('id', userId);
   }
 
   // ---------- Lookup lists for the form ----------
 
-  Future<List<LookupItem>> lookup(String table, {String orderBy = 'name'}) async {
+  Future<List<LookupItem>> lookup(
+    String table, {
+    String orderBy = 'name',
+  }) async {
     final rows = await _client.from(table).select('id, name').order(orderBy);
     return rows.map<LookupItem>((r) => LookupItem.fromJson(r)).toList();
   }

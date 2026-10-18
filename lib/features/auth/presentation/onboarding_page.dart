@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../app/theme/app_colors.dart';
 
 /// Three short screens explaining the idea. Skip is always available.
@@ -17,17 +18,17 @@ class _OnboardingPageState extends State<OnboardingPage> {
     (
       Icons.eco,
       'Discover what is growing nearby',
-      'See which produce local farmers have available today, close to your community.'
+      'See which produce local farmers have available today, close to your community.',
     ),
     (
       Icons.post_add,
       'Farmers make produce visible',
-      'Add what you have, set the amount and price, and let nearby buyers find you.'
+      'Add what you have, set the amount and price, and let nearby buyers find you.',
     ),
     (
       Icons.handshake_outlined,
       'Connect directly',
-      'Buyers contact farmers by call, WhatsApp or message, and agree the rest together.'
+      'Buyers contact farmers by call, WhatsApp or message, and agree the rest together.',
     ),
   ];
 
@@ -101,7 +102,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         Text(
                           body,
                           textAlign: TextAlign.center,
-                          style: text.bodyLarge?.copyWith(color: AppColors.grey),
+                          style: text.bodyLarge?.copyWith(
+                            color: AppColors.grey,
+                          ),
                         ),
                       ],
                     ),

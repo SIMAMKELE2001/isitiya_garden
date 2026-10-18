@@ -1,11 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
 import '../models/user_profile.dart';
 import 'auth_repository.dart';
 
 /// Gives any screen access to the one Supabase client.
-final supabaseClientProvider =
-    Provider<SupabaseClient>((ref) => Supabase.instance.client);
+final supabaseClientProvider = Provider<SupabaseClient>(
+  (ref) => Supabase.instance.client,
+);
 
 final authRepositoryProvider = Provider<AuthRepository>(
   (ref) => AuthRepository(ref.watch(supabaseClientProvider)),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../core/utils/validators.dart';
 import '../../../core/widgets/app_text_field.dart';
 import '../../../core/widgets/form_error_box.dart';
@@ -45,7 +46,9 @@ class _EditBuyerProfilePageState extends ConsumerState<EditBuyerProfilePage> {
       _error = null;
     });
     try {
-      await ref.read(authRepositoryProvider).updateBuyerProfile(
+      await ref
+          .read(authRepositoryProvider)
+          .updateBuyerProfile(
             userId: widget.profile.id,
             fullName: _name.text,
             phone: _phone.text,
@@ -60,7 +63,9 @@ class _EditBuyerProfilePageState extends ConsumerState<EditBuyerProfilePage> {
       messenger.showSnackBar(const SnackBar(content: Text('Profile updated.')));
     } catch (_) {
       if (mounted) {
-        setState(() => _error = 'We could not save your changes. Please try again.');
+        setState(
+          () => _error = 'We could not save your changes. Please try again.',
+        );
       }
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -126,7 +131,9 @@ class _EditBuyerProfilePageState extends ConsumerState<EditBuyerProfilePage> {
                       width: 22,
                       height: 22,
                       child: CircularProgressIndicator(
-                          strokeWidth: 3, color: Colors.white),
+                        strokeWidth: 3,
+                        color: Colors.white,
+                      ),
                     )
                   : const Text('Save changes'),
             ),

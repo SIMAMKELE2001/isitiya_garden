@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
 import '../../auth/data/auth_providers.dart';
 import '../models/produce.dart';
 
@@ -24,9 +25,15 @@ class ProduceRepository {
     if (text != null && text.isNotEmpty) {
       request = request.ilike('name', '%$text%'); // case-insensitive "contains"
     }
-    if (category != null) request = request.eq('category', category);
-    if (community != null) request = request.eq('community', community);
-    if (status != null) request = request.eq('availability_status', status.name);
+    if (category != null) {
+      request = request.eq('category', category);
+    }
+    if (community != null) {
+      request = request.eq('community', community);
+    }
+    if (status != null) {
+      request = request.eq('availability_status', status.name);
+    }
 
     final rows = await request.order('created_at', ascending: false);
     return rows.map<Produce>((r) => Produce.fromJson(r)).toList();
@@ -34,8 +41,10 @@ class ProduceRepository {
 
   /// Category names for the chips, in the order set in the database.
   Future<List<String>> fetchCategories() async {
-    final rows =
-        await _client.from('categories').select('name').order('sort_order');
+    final rows = await _client
+        .from('categories')
+        .select('name')
+        .order('sort_order');
     return rows.map<String>((r) => r['name'] as String).toList();
   }
 

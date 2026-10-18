@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../app/theme/app_colors.dart';
 import '../../../core/widgets/info_row.dart';
 import '../../auth/data/auth_providers.dart';
@@ -42,9 +43,10 @@ class BuyerProfilePage extends ConsumerWidget {
                             ? '?'
                             : profile.firstName[0].toUpperCase(),
                         style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w800,
-                            fontSize: 24),
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 24,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -52,12 +54,18 @@ class BuyerProfilePage extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(profile.fullName,
-                              style: text.titleLarge
-                                  ?.copyWith(fontWeight: FontWeight.w800)),
-                          Text('Buyer',
-                              style: text.bodyMedium
-                                  ?.copyWith(color: AppColors.grey)),
+                          Text(
+                            profile.fullName,
+                            style: text.titleLarge?.copyWith(
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          Text(
+                            'Buyer',
+                            style: text.bodyMedium?.copyWith(
+                              color: AppColors.grey,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -65,7 +73,10 @@ class BuyerProfilePage extends ConsumerWidget {
                 ),
                 const SizedBox(height: 20),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
@@ -74,21 +85,25 @@ class BuyerProfilePage extends ConsumerWidget {
                   child: Column(
                     children: [
                       InfoRow(
-                          icon: Icons.mail_outline,
-                          label: 'Email',
-                          value: email ?? 'Not available'),
+                        icon: Icons.mail_outline,
+                        label: 'Email',
+                        value: email ?? 'Not available',
+                      ),
                       InfoRow(
-                          icon: Icons.phone_outlined,
-                          label: 'Phone number',
-                          value: profile.phone),
+                        icon: Icons.phone_outlined,
+                        label: 'Phone number',
+                        value: profile.phone,
+                      ),
                       InfoRow(
-                          icon: Icons.place_outlined,
-                          label: 'Community',
-                          value: communityName),
+                        icon: Icons.place_outlined,
+                        label: 'Community',
+                        value: communityName,
+                      ),
                       InfoRow(
-                          icon: Icons.storefront_outlined,
-                          label: 'Buyer type',
-                          value: details?.buyerTypeName ?? 'Not set'),
+                        icon: Icons.storefront_outlined,
+                        label: 'Buyer type',
+                        value: details?.buyerTypeName ?? 'Not set',
+                      ),
                     ],
                   ),
                 ),
@@ -96,8 +111,10 @@ class BuyerProfilePage extends ConsumerWidget {
                 FilledButton.icon(
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(
-                      builder: (_) =>
-                          EditBuyerProfilePage(profile: profile, details: details),
+                      builder: (_) => EditBuyerProfilePage(
+                        profile: profile,
+                        details: details,
+                      ),
                     ),
                   ),
                   icon: const Icon(Icons.edit_outlined),

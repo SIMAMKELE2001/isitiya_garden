@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../app/theme/app_colors.dart';
 import '../../features/produce/models/produce.dart';
 import 'status_badge.dart';
@@ -22,7 +23,8 @@ class ProduceCard extends StatelessWidget {
 
     return Semantics(
       button: true,
-      label: '${produce.name}, ${produce.status.label}, '
+      label:
+          '${produce.name}, ${produce.status.label}, '
           'from ${produce.farmerName}, ${produce.community}',
       child: ExcludeSemantics(
         child: Material(
@@ -49,8 +51,9 @@ class ProduceCard extends StatelessWidget {
                           Expanded(
                             child: Text(
                               produce.name,
-                              style: text.titleLarge
-                                  ?.copyWith(fontWeight: FontWeight.w800),
+                              style: text.titleLarge?.copyWith(
+                                fontWeight: FontWeight.w800,
+                              ),
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -58,18 +61,25 @@ class ProduceCard extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 4),
-                      Text('From ${produce.farmerName}',
-                          style: text.bodyMedium
-                              ?.copyWith(color: AppColors.grey)),
+                      Text(
+                        'From ${produce.farmerName}',
+                        style: text.bodyMedium?.copyWith(color: AppColors.grey),
+                      ),
                       const SizedBox(height: 2),
                       Row(
                         children: [
-                          const Icon(Icons.place_outlined,
-                              size: 16, color: AppColors.grey),
+                          const Icon(
+                            Icons.place_outlined,
+                            size: 16,
+                            color: AppColors.grey,
+                          ),
                           const SizedBox(width: 4),
-                          Text(produce.community,
-                              style: text.bodyMedium
-                                  ?.copyWith(color: AppColors.grey)),
+                          Text(
+                            produce.community,
+                            style: text.bodyMedium?.copyWith(
+                              color: AppColors.grey,
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 8),
@@ -79,8 +89,9 @@ class ProduceCard extends StatelessWidget {
                       ),
                       Text(
                         produce.priceLabel,
-                        style: text.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.w800),
+                        style: text.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                       const SizedBox(height: 12),
                       FilledButton(

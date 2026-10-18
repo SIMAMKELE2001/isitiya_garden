@@ -134,33 +134,37 @@ class ListingInput {
   /// The database columns for this listing (the buyer types go in their
   /// own table, so they are not part of this map).
   Map<String, dynamic> toRow() => {
-        'name': name.trim(),
-        'category_id': categoryId,
-        'description': description,
-        'quantity': quantity,
-        'unit_id': unitId,
-        'price': price,
-        'is_price_negotiable': isPriceNegotiable,
-        'availability_status': status.name,
-        'available_from': _day(availableFrom),
-        'available_until': availableUntil == null ? null : _day(availableUntil!),
-        'community_id': communityId,
-        'location_note': locationNote,
-        'image_path': imagePath,
-      };
+    'name': name.trim(),
+    'category_id': categoryId,
+    'description': description,
+    'quantity': quantity,
+    'unit_id': unitId,
+    'price': price,
+    'is_price_negotiable': isPriceNegotiable,
+    'availability_status': status.name,
+    'available_from': _day(availableFrom),
+    'available_until': availableUntil == null ? null : _day(availableUntil!),
+    'community_id': communityId,
+    'location_note': locationNote,
+    'image_path': imagePath,
+  };
 }
 
 /// The farmer-only profile details (FR04).
 class FarmerDetails {
-  const FarmerDetails({required this.farmName, this.whatsappNumber, this.about});
+  const FarmerDetails({
+    required this.farmName,
+    this.whatsappNumber,
+    this.about,
+  });
 
   final String farmName;
   final String? whatsappNumber;
   final String? about;
 
   factory FarmerDetails.fromJson(Map<String, dynamic> json) => FarmerDetails(
-        farmName: json['farm_name'] as String,
-        whatsappNumber: json['whatsapp_number'] as String?,
-        about: json['about'] as String?,
-      );
+    farmName: json['farm_name'] as String,
+    whatsappNumber: json['whatsapp_number'] as String?,
+    about: json['about'] as String?,
+  );
 }

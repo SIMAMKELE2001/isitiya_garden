@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../app/theme/app_colors.dart';
 import '../../../core/widgets/status_badge.dart';
 import '../../produce/data/produce_repository.dart';
@@ -27,9 +28,11 @@ class ListingTile extends ConsumerWidget {
       ref.invalidate(myListingsProvider);
       messenger.showSnackBar(SnackBar(content: Text(successMessage)));
     } catch (_) {
-      messenger.showSnackBar(const SnackBar(
-        content: Text('Something went wrong. Please try again.'),
-      ));
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text('Something went wrong. Please try again.'),
+        ),
+      );
     }
   }
 
@@ -41,7 +44,9 @@ class ListingTile extends ConsumerWidget {
       ref,
       () => repo.setAvailability(
         listing.id,
-        makeAvailable ? AvailabilityStatus.available : AvailabilityStatus.unavailable,
+        makeAvailable
+            ? AvailabilityStatus.available
+            : AvailabilityStatus.unavailable,
       ),
       makeAvailable
           ? '${listing.name} is available again.'
@@ -53,8 +58,12 @@ class ListingTile extends ConsumerWidget {
     final repo = ref.read(farmerRepositoryProvider);
 
     if (!listing.isActive) {
-      return _run(context, ref, () => repo.setActive(listing.id, true),
-          '${listing.name} is active again.');
+      return _run(
+        context,
+        ref,
+        () => repo.setActive(listing.id, true),
+        '${listing.name} is active again.',
+      );
     }
 
     // Deactivating hides the listing, so ask first.
@@ -63,7 +72,8 @@ class ListingTile extends ConsumerWidget {
       builder: (dialogContext) => AlertDialog(
         title: const Text('Deactivate this listing?'),
         content: Text(
-            'Buyers will no longer see ${listing.name}. You can reactivate it later.'),
+          'Buyers will no longer see ${listing.name}. You can reactivate it later.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, false),
@@ -77,8 +87,12 @@ class ListingTile extends ConsumerWidget {
       ),
     );
     if (confirmed != true || !context.mounted) return;
-    return _run(context, ref, () => repo.setActive(listing.id, false),
-        '${listing.name} has been deactivated.');
+    return _run(
+      context,
+      ref,
+      () => repo.setActive(listing.id, false),
+      '${listing.name} has been deactivated.',
+    );
   }
 
   @override
@@ -106,15 +120,22 @@ class ListingTile extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(l.name,
-                        style: text.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.w800)),
+                    Text(
+                      l.name,
+                      style: text.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
                     const SizedBox(height: 2),
-                    Text('${l.quantityLabel} ${l.unitName} · ${l.priceLabel}',
-                        style: text.bodyMedium),
+                    Text(
+                      '${l.quantityLabel} ${l.unitName} · ${l.priceLabel}',
+                      style: text.bodyMedium,
+                    ),
                     const SizedBox(height: 2),
-                    Text(l.communityName,
-                        style: text.bodyMedium?.copyWith(color: AppColors.grey)),
+                    Text(
+                      l.communityName,
+                      style: text.bodyMedium?.copyWith(color: AppColors.grey),
+                    ),
                     const SizedBox(height: 8),
                     Wrap(
                       spacing: 6,
@@ -137,26 +158,36 @@ class ListingTile extends ConsumerWidget {
                   onPressed: () => openListingForm(context, existing: l),
                   icon: const Icon(Icons.edit_outlined),
                   label: const Text('Edit'),
-                  style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(48),
+                  ),
                 ),
               ),
               const SizedBox(width: 8),
               PopupMenuButton<String>(
                 tooltip: 'More actions',
                 onSelected: (value) {
-                  if (value == 'availability') _toggleAvailability(context, ref);
-                  if (value == 'active') _toggleActive(context, ref);
+                  if (value == 'availability') {
+                    _toggleAvailability(context, ref);
+                  }
+                  if (value == 'active') {
+                    _toggleActive(context, ref);
+                  }
                 },
                 itemBuilder: (_) => [
                   PopupMenuItem(
                     value: 'availability',
-                    child: Text(l.status == AvailabilityStatus.unavailable
-                        ? 'Mark as available'
-                        : 'Mark as unavailable'),
+                    child: Text(
+                      l.status == AvailabilityStatus.unavailable
+                          ? 'Mark as available'
+                          : 'Mark as unavailable',
+                    ),
                   ),
                   PopupMenuItem(
                     value: 'active',
-                    child: Text(l.isActive ? 'Deactivate listing' : 'Reactivate listing'),
+                    child: Text(
+                      l.isActive ? 'Deactivate listing' : 'Reactivate listing',
+                    ),
                   ),
                 ],
               ),
@@ -216,9 +247,14 @@ class _DeactivatedBadge extends StatelessWidget {
         children: [
           Icon(Icons.visibility_off, size: 14, color: AppColors.grey),
           SizedBox(width: 4),
-          Text('Deactivated',
-              style: TextStyle(
-                  color: AppColors.grey, fontSize: 13, fontWeight: FontWeight.w700)),
+          Text(
+            'Deactivated',
+            style: TextStyle(
+              color: AppColors.grey,
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
         ],
       ),
     );

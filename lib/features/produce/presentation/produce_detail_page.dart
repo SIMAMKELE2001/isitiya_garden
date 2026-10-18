@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../app/theme/app_colors.dart';
 import '../../../core/utils/format.dart';
 import '../../../core/widgets/info_row.dart';
@@ -13,7 +14,9 @@ import 'contact_sheet.dart';
 /// Opens the details screen for one listing.
 void openProduceDetails(BuildContext context, Produce produce) {
   Navigator.of(context).push(
-    MaterialPageRoute<void>(builder: (_) => ProduceDetailPage(produce: produce)),
+    MaterialPageRoute<void>(
+      builder: (_) => ProduceDetailPage(produce: produce),
+    ),
   );
 }
 
@@ -48,62 +51,91 @@ class ProduceDetailPage extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: Text(p.name,
-                          style: text.headlineSmall
-                              ?.copyWith(fontWeight: FontWeight.w800)),
+                      child: Text(
+                        p.name,
+                        style: text.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 8),
                     StatusBadge(p.status),
                   ],
                 ),
                 const SizedBox(height: 4),
-                Text(p.priceLabel,
-                    style: text.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w800, color: AppColors.forest)),
+                Text(
+                  p.priceLabel,
+                  style: text.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.forest,
+                  ),
+                ),
                 const SizedBox(height: 16),
                 _Panel(
                   children: [
                     InfoRow(
-                        icon: Icons.scale_outlined,
-                        label: 'Quantity',
-                        value: '${p.quantityLabel} ${p.unit}'),
+                      icon: Icons.scale_outlined,
+                      label: 'Quantity',
+                      value: '${p.quantityLabel} ${p.unit}',
+                    ),
                     InfoRow(
-                        icon: Icons.event_available_outlined,
-                        label: 'Availability',
-                        value: Format.availability(p.availableFrom, p.availableUntil)),
+                      icon: Icons.event_available_outlined,
+                      label: 'Availability',
+                      value: Format.availability(
+                        p.availableFrom,
+                        p.availableUntil,
+                      ),
+                    ),
                     InfoRow(
-                        icon: Icons.place_outlined,
-                        label: 'Location',
-                        value: location),
+                      icon: Icons.place_outlined,
+                      label: 'Location',
+                      value: location,
+                    ),
                     InfoRow(
-                        icon: Icons.schedule,
-                        label: 'Listed',
-                        value: Format.listed(p.createdAt)),
+                      icon: Icons.schedule,
+                      label: 'Listed',
+                      value: Format.listed(p.createdAt),
+                    ),
                   ],
                 ),
-                if (p.description != null && p.description!.trim().isNotEmpty) ...[
+                if (p.description != null &&
+                    p.description!.trim().isNotEmpty) ...[
                   const SizedBox(height: 20),
-                  Text('About this produce',
-                      style: text.titleMedium?.copyWith(fontWeight: FontWeight.w800)),
+                  Text(
+                    'About this produce',
+                    style: text.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
                   const SizedBox(height: 6),
                   Text(p.description!, style: text.bodyLarge),
                 ],
                 if (p.buyerTypes.isNotEmpty) ...[
                   const SizedBox(height: 20),
-                  Text('Who is this for?',
-                      style: text.titleMedium?.copyWith(fontWeight: FontWeight.w800)),
+                  Text(
+                    'Who is this for?',
+                    style: text.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
-                    children: [for (final t in p.buyerTypes) Chip(label: Text(t))],
+                    children: [
+                      for (final t in p.buyerTypes) Chip(label: Text(t)),
+                    ],
                   ),
                   const SizedBox(height: 10),
                   _Suitability(types: p.buyerTypes, myType: myType),
                 ],
                 const SizedBox(height: 20),
-                Text('Farmer',
-                    style: text.titleMedium?.copyWith(fontWeight: FontWeight.w800)),
+                Text(
+                  'Farmer',
+                  style: text.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
                 const SizedBox(height: 8),
                 _Panel(
                   children: [
@@ -113,11 +145,14 @@ class ProduceDetailPage extends ConsumerWidget {
                           radius: 24,
                           backgroundColor: AppColors.leaf,
                           child: Text(
-                            p.farmerName.isEmpty ? '?' : p.farmerName[0].toUpperCase(),
+                            p.farmerName.isEmpty
+                                ? '?'
+                                : p.farmerName[0].toUpperCase(),
                             style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w800,
-                                fontSize: 20),
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 20,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 14),
@@ -125,13 +160,19 @@ class ProduceDetailPage extends ConsumerWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(p.farmerName,
-                                  style: text.titleMedium
-                                      ?.copyWith(fontWeight: FontWeight.w800)),
+                              Text(
+                                p.farmerName,
+                                style: text.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
                               if (p.farmName != null) Text(p.farmName!),
-                              Text(p.community,
-                                  style: text.bodyMedium
-                                      ?.copyWith(color: AppColors.grey)),
+                              Text(
+                                p.community,
+                                style: text.bodyMedium?.copyWith(
+                                  color: AppColors.grey,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -224,14 +265,14 @@ class _Suitability extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(suits ? Icons.check_circle : Icons.info_outline,
-            color: suits ? AppColors.leaf : AppColors.grey),
+        Icon(
+          suits ? Icons.check_circle : Icons.info_outline,
+          color: suits ? AppColors.leaf : AppColors.grey,
+        ),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
-            suits
-                ? 'This listing is aimed at buyers like you ($myType).'
-                : 'This listing is aimed at the buyer types above. You can still contact the farmer.',
+            suits ? 'This listing is aimed at buyers like you ($myType).' : 'This listing is aimed at the buyer types above. You can still contact the farmer.',
             style: const TextStyle(fontWeight: FontWeight.w600),
           ),
         ),

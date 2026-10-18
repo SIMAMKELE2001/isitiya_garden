@@ -1,6 +1,8 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../app/theme/app_colors.dart';
 import '../../../core/widgets/choice_pill.dart';
 import '../../../core/widgets/produce_card.dart';
@@ -83,7 +85,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                 ChoicePill(
                   label: c,
                   selected: filters.category == c,
-                  onTap: () => notifier.setCategory(filters.category == c ? null : c),
+                  onTap: () =>
+                      notifier.setCategory(filters.category == c ? null : c),
                 ),
             ],
           ),
@@ -95,11 +98,15 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                 selected: filters.status == null,
                 onTap: () => notifier.setStatus(null),
               ),
-              for (final s in const [AvailabilityStatus.available, AvailabilityStatus.low])
+              for (final s in const [
+                AvailabilityStatus.available,
+                AvailabilityStatus.low,
+              ])
                 ChoicePill(
                   label: s.label,
                   selected: filters.status == s,
-                  onTap: () => notifier.setStatus(filters.status == s ? null : s),
+                  onTap: () =>
+                      notifier.setStatus(filters.status == s ? null : s),
                 ),
             ],
           ),
@@ -115,8 +122,9 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                 ChoicePill(
                   label: c.name,
                   selected: filters.community == c.name,
-                  onTap: () =>
-                      notifier.setCommunity(filters.community == c.name ? null : c.name),
+                  onTap: () => notifier.setCommunity(
+                    filters.community == c.name ? null : c.name,
+                  ),
                 ),
             ],
           ),
@@ -132,7 +140,9 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                         '${items.length} ${items.length == 1 ? 'result' : 'results'}',
                   ),
                   style: text.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w800, color: AppColors.forest),
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.forest,
+                  ),
                 ),
               ),
               if (filters.isActive)
@@ -146,11 +156,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
           const SizedBox(height: 8),
           results.when(
             loading: () => const Column(
-              children: [
-                SkeletonCard(),
-                SizedBox(height: 14),
-                SkeletonCard(),
-              ],
+              children: [SkeletonCard(), SizedBox(height: 14), SkeletonCard()],
             ),
             error: (e, _) => ErrorState(
               message: 'Something went wrong. Please try again.',
@@ -196,11 +202,11 @@ class _FilterRow extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title,
-            style: Theme.of(context)
-                .textTheme
-                .titleSmall
-                ?.copyWith(fontWeight: FontWeight.w700)),
+        Text(
+          title,
+          style: Theme.of(context).textTheme.titleSmall
+              ?.copyWith(fontWeight: FontWeight.w700),
+        ),
         const SizedBox(height: 6),
         SizedBox(
           height: 48,

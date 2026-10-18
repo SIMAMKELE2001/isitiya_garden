@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../app/theme/app_colors.dart';
 
 /// An icon, a small grey label and a value. Used for detail screens.
@@ -28,10 +29,14 @@ class InfoRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label,
-                    style: text.bodySmall?.copyWith(color: AppColors.grey)),
-                Text(value,
-                    style: text.bodyLarge?.copyWith(fontWeight: FontWeight.w600)),
+                Text(
+                  label,
+                  style: text.bodySmall?.copyWith(color: AppColors.grey),
+                ),
+                Text(
+                  value,
+                  style: text.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+                ),
               ],
             ),
           ),

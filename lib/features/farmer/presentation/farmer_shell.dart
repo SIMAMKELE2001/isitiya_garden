@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../app/theme/app_colors.dart';
 import '../../profile/presentation/farmer_profile_page.dart';
 import '../data/farmer_providers.dart';
@@ -32,12 +33,15 @@ class FarmerShell extends ConsumerWidget {
               backgroundColor: AppColors.gold,
               foregroundColor: const Color(0xFF2A1D00),
               icon: const Icon(Icons.add),
-              label: const Text('Add produce',
-                  style: TextStyle(fontWeight: FontWeight.w800)),
+              label: const Text(
+                'Add produce',
+                style: TextStyle(fontWeight: FontWeight.w800),
+              ),
             ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: index,
-        onDestinationSelected: (i) => ref.read(farmerTabProvider.notifier).select(i),
+        onDestinationSelected: (i) =>
+            ref.read(farmerTabProvider.notifier).select(i),
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.home_outlined),

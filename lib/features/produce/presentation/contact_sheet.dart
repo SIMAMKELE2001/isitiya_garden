@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../../app/theme/app_colors.dart';
 import '../../../core/utils/phone_utils.dart';
 import '../models/produce.dart';
@@ -42,9 +43,13 @@ class _ContactSheet extends StatelessWidget {
       opened = false;
     }
     if (!opened) {
-      messenger.showSnackBar(const SnackBar(
-        content: Text('Could not open that app. Try another way to contact the farmer.'),
-      ));
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Could not open that app. Try another way to contact the farmer.',
+          ),
+        ),
+      );
     }
   }
 
@@ -68,12 +73,18 @@ class _ContactSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Contact ${produce.farmerName}',
-                style: text.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w800, color: AppColors.forest)),
+            Text(
+              'Contact ${produce.farmerName}',
+              style: text.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w800,
+                color: AppColors.forest,
+              ),
+            ),
             const SizedBox(height: 4),
-            Text('About: ${produce.name}',
-                style: text.bodyLarge?.copyWith(color: AppColors.grey)),
+            Text(
+              'About: ${produce.name}',
+              style: text.bodyLarge?.copyWith(color: AppColors.grey),
+            ),
             const SizedBox(height: 16),
             _ContactButton(
               icon: Icons.call,
@@ -90,7 +101,9 @@ class _ContactSheet extends StatelessWidget {
               onTap: waNumber == null
                   ? null
                   : () => _open(
-                      context, Uri.parse('https://wa.me/$waNumber?text=$encoded')),
+                      context,
+                      Uri.parse('https://wa.me/$waNumber?text=$encoded'),
+                    ),
             ),
             _ContactButton(
               icon: Icons.sms_outlined,
@@ -99,7 +112,9 @@ class _ContactSheet extends StatelessWidget {
               onTap: callNumber == null
                   ? null
                   : () => _open(
-                      context, Uri.parse('sms:+$callNumber?body=$encoded')),
+                      context,
+                      Uri.parse('sms:+$callNumber?body=$encoded'),
+                    ),
             ),
             const SizedBox(height: 8),
             Container(
@@ -161,19 +176,27 @@ class _ContactButton extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             child: Row(
               children: [
-                Icon(icon,
-                    size: 28,
-                    color: enabled ? AppColors.forest : AppColors.grey),
+                Icon(
+                  icon,
+                  size: 28,
+                  color: enabled ? AppColors.forest : AppColors.grey,
+                ),
                 const SizedBox(width: 14),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(label,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w800, fontSize: 17)),
-                      Text(detail ?? 'No number provided',
-                          style: const TextStyle(color: AppColors.grey)),
+                      Text(
+                        label,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 17,
+                        ),
+                      ),
+                      Text(
+                        detail ?? 'No number provided',
+                        style: const TextStyle(color: AppColors.grey),
+                      ),
                     ],
                   ),
                 ),

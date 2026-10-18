@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+
 import 'app_colors.dart';
 
 /// App-wide theme: colours, typography and default component styles.
 abstract final class AppTheme {
   static ThemeData get light {
-    final scheme = ColorScheme.fromSeed(
-      seedColor: AppColors.forest,
-      brightness: Brightness.light,
-    ).copyWith(
-      primary: AppColors.forest,
-      onPrimary: Colors.white,
-      secondary: AppColors.gold,
-      error: AppColors.error,
-      surface: AppColors.cream,
-      onSurface: AppColors.ink,
-    );
+    final scheme =
+        ColorScheme.fromSeed(
+          seedColor: AppColors.forest,
+          brightness: Brightness.light,
+        ).copyWith(
+          primary: AppColors.forest,
+          onPrimary: Colors.white,
+          secondary: AppColors.gold,
+          error: AppColors.error,
+          surface: AppColors.cream,
+          onSurface: AppColors.ink,
+        );
 
     // 'Figtree' is bundled in assets/fonts and declared in pubspec.yaml.
     final base = ThemeData(
@@ -22,8 +24,10 @@ abstract final class AppTheme {
       colorScheme: scheme,
       fontFamily: 'Figtree',
     );
-    final textTheme =
-        base.textTheme.apply(bodyColor: AppColors.ink, displayColor: AppColors.ink);
+    final textTheme = base.textTheme.apply(
+      bodyColor: AppColors.ink,
+      displayColor: AppColors.ink,
+    );
 
     OutlineInputBorder border(Color color, [double width = 2]) =>
         OutlineInputBorder(
@@ -31,10 +35,12 @@ abstract final class AppTheme {
           borderSide: BorderSide(color: color, width: width),
         );
 
-    final buttonShape =
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(14));
-    final buttonText =
-        textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700);
+    final buttonShape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(14),
+    );
+    final buttonText = textTheme.titleMedium?.copyWith(
+      fontWeight: FontWeight.w700,
+    );
 
     return base.copyWith(
       textTheme: textTheme,
@@ -44,8 +50,9 @@ abstract final class AppTheme {
         foregroundColor: AppColors.ink,
         elevation: 0,
         scrolledUnderElevation: 0,
-        titleTextStyle:
-            textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+        titleTextStyle: textTheme.titleLarge?.copyWith(
+          fontWeight: FontWeight.w700,
+        ),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
@@ -78,8 +85,10 @@ abstract final class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: Colors.white,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 16,
+        ),
         border: border(AppColors.line),
         enabledBorder: border(AppColors.line),
         focusedBorder: border(AppColors.forest),

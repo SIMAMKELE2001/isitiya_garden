@@ -1,4 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+
 import '../models/user_profile.dart';
 
 /// The only place that talks to Supabase about accounts.
@@ -71,14 +72,18 @@ class AuthRepository {
     required int communityId,
     required int buyerTypeId,
   }) async {
-    await _client.from('profiles').update({
-      'full_name': fullName.trim(),
-      'phone': phone.trim(),
-      'community_id': communityId,
-    }).eq('id', userId);
+    await _client
+        .from('profiles')
+        .update({
+          'full_name': fullName.trim(),
+          'phone': phone.trim(),
+          'community_id': communityId,
+        })
+        .eq('id', userId);
     await _client
         .from('buyer_profiles')
-        .update({'buyer_type_id': buyerTypeId}).eq('id', userId);
+        .update({'buyer_type_id': buyerTypeId})
+        .eq('id', userId);
   }
 
   Future<List<LookupItem>> communities() => _lookup('communities');

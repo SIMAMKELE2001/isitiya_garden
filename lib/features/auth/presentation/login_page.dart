@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../app/theme/app_colors.dart';
 import '../../../core/utils/validators.dart';
 import '../../../core/widgets/app_logo.dart';
@@ -65,12 +66,18 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             const SizedBox(height: 12),
             const Align(alignment: Alignment.centerLeft, child: AppLogo()),
             const SizedBox(height: 20),
-            Text('Welcome back',
-                style: text.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.w800, color: AppColors.forest)),
+            Text(
+              'Welcome back',
+              style: text.headlineMedium?.copyWith(
+                fontWeight: FontWeight.w800,
+                color: AppColors.forest,
+              ),
+            ),
             const SizedBox(height: 6),
-            Text('Log in to see what is growing near you.',
-                style: text.bodyLarge?.copyWith(color: AppColors.grey)),
+            Text(
+              'Log in to see what is growing near you.',
+              style: text.bodyLarge?.copyWith(color: AppColors.grey),
+            ),
             const SizedBox(height: 24),
             Form(
               key: _formKey,
@@ -95,10 +102,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     autofillHints: const [AutofillHints.password],
                     validator: (v) => Validators.notEmpty(v, 'Password'),
                     suffix: IconButton(
-                      tooltip: _hidePassword ? 'Show password' : 'Hide password',
-                      icon: Icon(_hidePassword
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined),
+                      tooltip: _hidePassword
+                          ? 'Show password'
+                          : 'Hide password',
+                      icon: Icon(
+                        _hidePassword
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                      ),
                       onPressed: () =>
                           setState(() => _hidePassword = !_hidePassword),
                     ),
@@ -118,7 +129,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       width: 22,
                       height: 22,
                       child: CircularProgressIndicator(
-                          strokeWidth: 3, color: Colors.white),
+                        strokeWidth: 3,
+                        color: Colors.white,
+                      ),
                     )
                   : const Text('Log in'),
             ),
@@ -127,9 +140,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               onPressed: _busy
                   ? null
                   : () => Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                            builder: (_) => const RegisterPage()),
+                      MaterialPageRoute<void>(
+                        builder: (_) => const RegisterPage(),
                       ),
+                    ),
               child: const Text('Create account'),
             ),
           ],

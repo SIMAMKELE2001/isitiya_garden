@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../features/produce/models/produce.dart';
 
 /// Shows availability using an icon, words AND colour, so the status is
@@ -11,15 +12,21 @@ class StatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (icon, fg, bg) = switch (status) {
-      AvailabilityStatus.available =>
-        (Icons.check_circle, const Color(0xFF1F6B2B), const Color(0xFFE3F3DC)),
+      AvailabilityStatus.available => (
+        Icons.check_circle,
+        const Color(0xFF1F6B2B),
+        const Color(0xFFE3F3DC),
+      ),
       AvailabilityStatus.low => (
-          Icons.warning_amber_rounded,
-          const Color(0xFF8A5A00),
-          const Color(0xFFFFF1CC)
-        ),
-      AvailabilityStatus.unavailable =>
-        (Icons.cancel, const Color(0xFF7A2B26), const Color(0xFFF7DEDB)),
+        Icons.warning_amber_rounded,
+        const Color(0xFF8A5A00),
+        const Color(0xFFFFF1CC),
+      ),
+      AvailabilityStatus.unavailable => (
+        Icons.cancel,
+        const Color(0xFF7A2B26),
+        const Color(0xFFF7DEDB),
+      ),
     };
 
     return Container(
@@ -36,7 +43,11 @@ class StatusBadge extends StatelessWidget {
           const SizedBox(width: 4),
           Text(
             status.label,
-            style: TextStyle(color: fg, fontSize: 13, fontWeight: FontWeight.w700),
+            style: TextStyle(
+              color: fg,
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ],
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../profile/presentation/buyer_profile_page.dart';
 import '../data/buyer_providers.dart';
 import 'buyer_home_page.dart';
@@ -18,15 +19,12 @@ class BuyerShell extends ConsumerWidget {
       // lose the search text or scroll position.
       body: IndexedStack(
         index: index,
-        children: const [
-          BuyerHomePage(),
-          SearchPage(),
-          BuyerProfilePage(),
-        ],
+        children: const [BuyerHomePage(), SearchPage(), BuyerProfilePage()],
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: index,
-        onDestinationSelected: (i) => ref.read(buyerTabProvider.notifier).select(i),
+        onDestinationSelected: (i) =>
+            ref.read(buyerTabProvider.notifier).select(i),
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.home_outlined),

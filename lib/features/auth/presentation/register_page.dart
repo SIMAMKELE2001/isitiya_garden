@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../app/theme/app_colors.dart';
 import '../../../core/utils/validators.dart';
 import '../../../core/widgets/app_dropdown_field.dart';
@@ -50,7 +51,9 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
       _error = null;
     });
     try {
-      final signedIn = await ref.read(authRepositoryProvider).register(
+      final signedIn = await ref
+          .read(authRepositoryProvider)
+          .register(
             email: _email.text,
             password: _password.text,
             role: _role!,
@@ -64,9 +67,13 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
       // Close this screen so the home screen behind it becomes visible.
       Navigator.of(context).popUntil((route) => route.isFirst);
       if (!signedIn) {
-        messenger.showSnackBar(const SnackBar(
-          content: Text('Account created. Check your email to confirm it, then log in.'),
-        ));
+        messenger.showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Account created. Check your email to confirm it, then log in.',
+            ),
+          ),
+        );
       }
     } catch (e) {
       if (mounted) setState(() => _error = friendlyAuthError(e));
@@ -111,11 +118,11 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     final role = _role;
     return Scaffold(
       appBar: AppBar(
-        title: Text(role == null ? 'Create account' : 'Register as a ${role.name}'),
+        title: Text(
+          role == null ? 'Create account' : 'Register as a ${role.name}',
+        ),
       ),
-      body: SafeArea(
-        child: role == null ? _roleChooser() : _form(role),
-      ),
+      body: SafeArea(child: role == null ? _roleChooser() : _form(role)),
     );
   }
 
@@ -123,11 +130,11 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     return ListView(
       padding: const EdgeInsets.all(24),
       children: [
-        Text('Who are you?',
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall
-                ?.copyWith(fontWeight: FontWeight.w800, color: AppColors.forest)),
+        Text(
+          'Who are you?',
+          style: Theme.of(context).textTheme.headlineSmall
+              ?.copyWith(fontWeight: FontWeight.w800, color: AppColors.forest),
+        ),
         const SizedBox(height: 16),
         _RoleCard(
           icon: Icons.agriculture,
@@ -215,10 +222,13 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                 validator: Validators.password,
                 suffix: IconButton(
                   tooltip: _hidePassword ? 'Show password' : 'Hide password',
-                  icon: Icon(_hidePassword
-                      ? Icons.visibility_outlined
-                      : Icons.visibility_off_outlined),
-                  onPressed: () => setState(() => _hidePassword = !_hidePassword),
+                  icon: Icon(
+                    _hidePassword
+                        ? Icons.visibility_outlined
+                        : Icons.visibility_off_outlined,
+                  ),
+                  onPressed: () =>
+                      setState(() => _hidePassword = !_hidePassword),
                 ),
               ),
               const SizedBox(height: 16),
@@ -246,7 +256,9 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   width: 22,
                   height: 22,
                   child: CircularProgressIndicator(
-                      strokeWidth: 3, color: Colors.white),
+                    strokeWidth: 3,
+                    color: Colors.white,
+                  ),
                 )
               : const Text('Create account'),
         ),
@@ -294,12 +306,17 @@ class _RoleCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title,
-                        style: text.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.w800)),
+                    Text(
+                      title,
+                      style: text.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
                     const SizedBox(height: 2),
-                    Text(subtitle,
-                        style: text.bodyMedium?.copyWith(color: AppColors.grey)),
+                    Text(
+                      subtitle,
+                      style: text.bodyMedium?.copyWith(color: AppColors.grey),
+                    ),
                   ],
                 ),
               ),

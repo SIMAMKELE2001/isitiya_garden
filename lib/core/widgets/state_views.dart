@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../app/theme/app_colors.dart';
 
 /// Shown when there is nothing to display yet.
@@ -20,13 +21,13 @@ class EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => _StateMessage(
-        icon: icon,
-        color: AppColors.leaf,
-        title: title,
-        message: message,
-        actionLabel: actionLabel,
-        onAction: onAction,
-      );
+    icon: icon,
+    color: AppColors.leaf,
+    title: title,
+    message: message,
+    actionLabel: actionLabel,
+    onAction: onAction,
+  );
 }
 
 /// Shown when something failed, with a way to try again.
@@ -38,13 +39,13 @@ class ErrorState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => _StateMessage(
-        icon: Icons.error_outline,
-        color: AppColors.error,
-        title: message,
-        message: 'Check your connection and try again.',
-        actionLabel: 'Try again',
-        onAction: onRetry,
-      );
+    icon: Icons.error_outline,
+    color: AppColors.error,
+    title: message,
+    message: 'Check your connection and try again.',
+    actionLabel: 'Try again',
+    onAction: onRetry,
+  );
 }
 
 class _StateMessage extends StatelessWidget {
@@ -74,13 +75,17 @@ class _StateMessage extends StatelessWidget {
         children: [
           Icon(icon, size: 56, color: color),
           const SizedBox(height: 12),
-          Text(title,
-              textAlign: TextAlign.center,
-              style: text.titleLarge?.copyWith(fontWeight: FontWeight.w800)),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: text.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+          ),
           const SizedBox(height: 6),
-          Text(message,
-              textAlign: TextAlign.center,
-              style: text.bodyLarge?.copyWith(color: AppColors.grey)),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: text.bodyLarge?.copyWith(color: AppColors.grey),
+          ),
           if (actionLabel != null) ...[
             const SizedBox(height: 20),
             FilledButton(onPressed: onAction, child: Text(actionLabel!)),

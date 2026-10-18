@@ -40,8 +40,13 @@ void main() {
   });
 
   group('Validators.fullName', () {
-    test('rejects one letter', () => expect(Validators.fullName('A'), isNotNull));
-    test('accepts a real name',
-        () => expect(Validators.fullName('Nomsa Mbatha'), isNull));
+    test(
+      'rejects one letter',
+      () => expect(Validators.fullName('A'), isNotNull),
+    );
+    test(
+      'accepts a real name',
+      () => expect(Validators.fullName('Nomsa Mbatha'), isNull),
+    );
   });
 }

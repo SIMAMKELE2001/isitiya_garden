@@ -10,7 +10,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   if (Env.isConfigured) {
-    await Supabase.initialize(url: Env.supabaseUrl, publishableKey: Env.supabaseKey);
+    await Supabase.initialize(
+      url: Env.supabaseUrl,
+      publishableKey: Env.supabaseKey,
+    );
   }
 
   runApp(ProviderScope(child: IsitiyaGardenApp(configured: Env.isConfigured)));

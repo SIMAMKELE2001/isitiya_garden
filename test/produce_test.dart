@@ -6,22 +6,21 @@ Map<String, dynamic> sample({
   bool negotiable = false,
   Object quantity = 40,
   String status = 'available',
-}) =>
-    {
-      'id': '1',
-      'name': 'Fresh spinach',
-      'category': 'Vegetables',
-      'quantity': quantity,
-      'unit': 'bunch',
-      'price': price,
-      'is_price_negotiable': negotiable,
-      'availability_status': status,
-      'community': 'Qunu',
-      'farmer_name': 'Nomsa Mbatha',
-      'buyer_types': ['Household', 'Spaza shop'],
-      'available_from': '2026-10-15',
-      'created_at': '2026-10-15T10:00:00+00:00',
-    };
+}) => {
+  'id': '1',
+  'name': 'Fresh spinach',
+  'category': 'Vegetables',
+  'quantity': quantity,
+  'unit': 'bunch',
+  'price': price,
+  'is_price_negotiable': negotiable,
+  'availability_status': status,
+  'community': 'Qunu',
+  'farmer_name': 'Nomsa Mbatha',
+  'buyer_types': ['Household', 'Spaza shop'],
+  'available_from': '2026-10-15',
+  'created_at': '2026-10-15T10:00:00+00:00',
+};
 
 void main() {
   group('Produce.fromJson', () {
@@ -37,7 +36,9 @@ void main() {
     });
 
     test('copes with missing optional fields', () {
-      final json = sample()..remove('buyer_types')..remove('available_from');
+      final json = sample()
+        ..remove('buyer_types')
+        ..remove('available_from');
       final p = Produce.fromJson(json);
       expect(p.buyerTypes, isEmpty);
       expect(p.availableFrom, isNull);
@@ -45,9 +46,14 @@ void main() {
     });
 
     test('maps the status text from the database', () {
-      expect(Produce.fromJson(sample(status: 'low')).status, AvailabilityStatus.low);
-      expect(Produce.fromJson(sample(status: 'unavailable')).status,
-          AvailabilityStatus.unavailable);
+      expect(
+        Produce.fromJson(sample(status: 'low')).status,
+        AvailabilityStatus.low,
+      );
+      expect(
+        Produce.fromJson(sample(status: 'unavailable')).status,
+        AvailabilityStatus.unavailable,
+      );
     });
   });
 
@@ -56,15 +62,22 @@ void main() {
       expect(Produce.fromJson(sample()).priceLabel, 'R12 per bunch');
     });
     test('price label with cents', () {
-      expect(Produce.fromJson(sample(price: 12.5)).priceLabel, 'R12.50 per bunch');
+      expect(
+        Produce.fromJson(sample(price: 12.5)).priceLabel,
+        'R12.50 per bunch',
+      );
     });
     test('price label when negotiable', () {
-      expect(Produce.fromJson(sample(negotiable: true)).priceLabel,
-          'R12 per bunch · negotiable');
+      expect(
+        Produce.fromJson(sample(negotiable: true)).priceLabel,
+        'R12 per bunch · negotiable',
+      );
     });
     test('price label when there is no price', () {
-      expect(Produce.fromJson(sample(price: null, negotiable: true)).priceLabel,
-          'Price negotiable');
+      expect(
+        Produce.fromJson(sample(price: null, negotiable: true)).priceLabel,
+        'Price negotiable',
+      );
     });
     test('quantity label drops a useless .0', () {
       expect(Produce.fromJson(sample()).quantityLabel, '40');

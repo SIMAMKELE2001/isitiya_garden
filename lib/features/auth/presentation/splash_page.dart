@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../app/theme/app_colors.dart';
 import '../../../core/widgets/app_logo.dart';
 
@@ -18,7 +19,11 @@ class SplashPage extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Color(0xFF1B2428), Color(0xFF4A5A5C), Color(0xFF8B9A92)],
+                colors: [
+                  Color(0xFF1B2428),
+                  Color(0xFF4A5A5C),
+                  Color(0xFF8B9A92),
+                ],
               ),
             ),
           ),
@@ -34,18 +39,18 @@ class SplashPage extends StatelessWidget {
                   Text(
                     'isitiyaGarden',
                     style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w800,
-                        ),
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Growing local. Connecting communities.',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                   const SizedBox(height: 28),
                   TweenAnimationBuilder<double>(
@@ -82,14 +87,29 @@ class _LandscapePainter extends CustomPainter {
     // Dark rain clouds.
     final cloud = Paint()..color = const Color(0xFF2A3538);
     canvas.drawOval(
-        Rect.fromCenter(center: Offset(w * 0.2, h * 0.13), width: w * 0.9, height: h * 0.12),
-        cloud);
+      Rect.fromCenter(
+        center: Offset(w * 0.2, h * 0.13),
+        width: w * 0.9,
+        height: h * 0.12,
+      ),
+      cloud,
+    );
     canvas.drawOval(
-        Rect.fromCenter(center: Offset(w * 0.8, h * 0.10), width: w * 0.9, height: h * 0.13),
-        cloud);
+      Rect.fromCenter(
+        center: Offset(w * 0.8, h * 0.10),
+        width: w * 0.9,
+        height: h * 0.13,
+      ),
+      cloud,
+    );
     canvas.drawOval(
-        Rect.fromCenter(center: Offset(w * 0.5, h * 0.22), width: w * 1.1, height: h * 0.10),
-        Paint()..color = const Color(0xFF5D6D6E).withValues(alpha: 0.7));
+      Rect.fromCenter(
+        center: Offset(w * 0.5, h * 0.22),
+        width: w * 1.1,
+        height: h * 0.10,
+      ),
+      Paint()..color = const Color(0xFF5D6D6E).withValues(alpha: 0.7),
+    );
 
     // Rolling hills.
     final far = Path()

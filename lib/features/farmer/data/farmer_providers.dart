@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../auth/data/auth_providers.dart';
 import '../../auth/models/user_profile.dart';
 import '../models/farmer_models.dart';
@@ -16,8 +17,9 @@ class FarmerTabNotifier extends Notifier<int> {
   void select(int index) => state = index;
 }
 
-final farmerTabProvider =
-    NotifierProvider<FarmerTabNotifier, int>(FarmerTabNotifier.new);
+final farmerTabProvider = NotifierProvider<FarmerTabNotifier, int>(
+  FarmerTabNotifier.new,
+);
 
 /// The logged-in farmer's own listings. Call ref.invalidate(...) after any
 /// change and every screen showing it refreshes.

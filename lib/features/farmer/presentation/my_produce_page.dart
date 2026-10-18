@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../app/theme/app_colors.dart';
 import '../../../core/widgets/choice_pill.dart';
 import '../../../core/widgets/state_views.dart';
@@ -35,7 +36,11 @@ class _MyProducePageState extends ConsumerState<MyProducePage> {
           children: [
             listings.when(
               loading: () => const Column(
-                children: [SkeletonCard(), SizedBox(height: 14), SkeletonCard()],
+                children: [
+                  SkeletonCard(),
+                  SizedBox(height: 14),
+                  SkeletonCard(),
+                ],
               ),
               error: (e, _) => ErrorState(
                 message: 'Something went wrong. Please try again.',
@@ -60,7 +65,8 @@ class _MyProducePageState extends ConsumerState<MyProducePage> {
                               child: ChoicePill(
                                 label: 'Active (${active.length})',
                                 selected: !_showDeactivated,
-                                onTap: () => setState(() => _showDeactivated = false),
+                                onTap: () =>
+                                    setState(() => _showDeactivated = false),
                               ),
                             ),
                           ),
@@ -68,7 +74,8 @@ class _MyProducePageState extends ConsumerState<MyProducePage> {
                             child: ChoicePill(
                               label: 'Deactivated (${deactivated.length})',
                               selected: _showDeactivated,
-                              onTap: () => setState(() => _showDeactivated = true),
+                              onTap: () =>
+                                  setState(() => _showDeactivated = true),
                             ),
                           ),
                         ],
@@ -85,7 +92,9 @@ class _MyProducePageState extends ConsumerState<MyProducePage> {
                     const SizedBox(height: 10),
                     if (shown.isEmpty)
                       EmptyState(
-                        icon: _showDeactivated ? Icons.visibility_off_outlined : Icons.eco_outlined,
+                        icon: _showDeactivated
+                            ? Icons.visibility_off_outlined
+                            : Icons.eco_outlined,
                         title: _showDeactivated
                             ? 'No deactivated listings.'
                             : 'No produce available yet.',
@@ -93,7 +102,9 @@ class _MyProducePageState extends ConsumerState<MyProducePage> {
                             ? 'Listings you deactivate will appear here.'
                             : 'Add what you have and nearby buyers can find you.',
                         actionLabel: _showDeactivated ? null : 'Add produce',
-                        onAction: _showDeactivated ? null : () => openListingForm(context),
+                        onAction: _showDeactivated
+                            ? null
+                            : () => openListingForm(context),
                       )
                     else
                       for (final l in shown) ListingTile(listing: l),

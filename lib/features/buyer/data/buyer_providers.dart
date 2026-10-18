@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../auth/data/auth_providers.dart';
 import '../../auth/models/user_profile.dart';
 import '../../produce/data/produce_repository.dart';
@@ -12,8 +13,9 @@ class BuyerTabNotifier extends Notifier<int> {
   void select(int index) => state = index;
 }
 
-final buyerTabProvider =
-    NotifierProvider<BuyerTabNotifier, int>(BuyerTabNotifier.new);
+final buyerTabProvider = NotifierProvider<BuyerTabNotifier, int>(
+  BuyerTabNotifier.new,
+);
 
 /// Everything the buyer has chosen on the Search tab.
 class SearchFilters {
@@ -41,41 +43,48 @@ class SearchFiltersNotifier extends Notifier<SearchFilters> {
   SearchFilters build() => const SearchFilters();
 
   void setQuery(String value) => state = SearchFilters(
-      query: value,
-      category: state.category,
-      community: state.community,
-      status: state.status);
+    query: value,
+    category: state.category,
+    community: state.community,
+    status: state.status,
+  );
 
   void setCategory(String? value) => state = SearchFilters(
-      query: state.query,
-      category: value,
-      community: state.community,
-      status: state.status);
+    query: state.query,
+    category: value,
+    community: state.community,
+    status: state.status,
+  );
 
   void setCommunity(String? value) => state = SearchFilters(
-      query: state.query,
-      category: state.category,
-      community: value,
-      status: state.status);
+    query: state.query,
+    category: state.category,
+    community: value,
+    status: state.status,
+  );
 
   void setStatus(AvailabilityStatus? value) => state = SearchFilters(
-      query: state.query,
-      category: state.category,
-      community: state.community,
-      status: value);
+    query: state.query,
+    category: state.category,
+    community: state.community,
+    status: value,
+  );
 
   void clear() => state = const SearchFilters();
 }
 
 final searchFiltersProvider =
     NotifierProvider<SearchFiltersNotifier, SearchFilters>(
-        SearchFiltersNotifier.new);
+      SearchFiltersNotifier.new,
+    );
 
 /// Re-runs the database query every time a filter changes, which also
 /// gives us the loading state for free.
 final searchResultsProvider = FutureProvider<List<Produce>>((ref) {
   final f = ref.watch(searchFiltersProvider);
-  return ref.watch(produceRepositoryProvider).fetchActive(
+  return ref
+      .watch(produceRepositoryProvider)
+      .fetchActive(
         query: f.query,
         category: f.category,
         community: f.community,

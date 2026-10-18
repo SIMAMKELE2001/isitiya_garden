@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../core/utils/validators.dart';
 import '../../../core/widgets/app_text_field.dart';
 import '../../../core/widgets/form_error_box.dart';
@@ -27,8 +28,9 @@ class _EditFarmerProfilePageState extends ConsumerState<EditFarmerProfilePage> {
   late final _name = TextEditingController(text: widget.profile.fullName);
   late final _farm = TextEditingController(text: widget.details?.farmName);
   late final _phone = TextEditingController(text: widget.profile.phone);
-  late final _whatsapp =
-      TextEditingController(text: widget.details?.whatsappNumber);
+  late final _whatsapp = TextEditingController(
+    text: widget.details?.whatsappNumber,
+  );
   late final _about = TextEditingController(text: widget.details?.about);
   late int? _communityId = widget.profile.communityId;
   bool _busy = false;
@@ -53,7 +55,9 @@ class _EditFarmerProfilePageState extends ConsumerState<EditFarmerProfilePage> {
     try {
       final whatsapp = _whatsapp.text.trim();
       final about = _about.text.trim();
-      await ref.read(farmerRepositoryProvider).updateFarmerProfile(
+      await ref
+          .read(farmerRepositoryProvider)
+          .updateFarmerProfile(
             userId: widget.profile.id,
             fullName: _name.text,
             phone: _phone.text,
@@ -70,7 +74,9 @@ class _EditFarmerProfilePageState extends ConsumerState<EditFarmerProfilePage> {
       messenger.showSnackBar(const SnackBar(content: Text('Profile updated.')));
     } catch (_) {
       if (mounted) {
-        setState(() => _error = 'We could not save your changes. Please try again.');
+        setState(
+          () => _error = 'We could not save your changes. Please try again.',
+        );
       }
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -117,8 +123,9 @@ class _EditFarmerProfilePageState extends ConsumerState<EditFarmerProfilePage> {
                     controller: _whatsapp,
                     keyboardType: TextInputType.phone,
                     textInputAction: TextInputAction.next,
-                    validator: (v) =>
-                        (v == null || v.trim().isEmpty) ? null : Validators.phone(v),
+                    validator: (v) => (v == null || v.trim().isEmpty)
+                        ? null
+                        : Validators.phone(v),
                   ),
                   const SizedBox(height: 16),
                   LookupDropdown(
@@ -152,7 +159,9 @@ class _EditFarmerProfilePageState extends ConsumerState<EditFarmerProfilePage> {
                       width: 22,
                       height: 22,
                       child: CircularProgressIndicator(
-                          strokeWidth: 3, color: Colors.white),
+                        strokeWidth: 3,
+                        color: Colors.white,
+                      ),
                     )
                   : const Text('Save changes'),
             ),

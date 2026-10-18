@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../core/widgets/state_views.dart';
 import '../features/auth/data/auth_providers.dart';
 import '../features/auth/models/user_profile.dart';
@@ -73,7 +74,8 @@ class _AppGateState extends ConsumerState<AppGate> {
     final profile = ref.watch(currentProfileProvider);
     return profile.when(
       skipLoadingOnReload: true,
-      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
       error: (e, _) => Scaffold(
         body: Center(
           child: ErrorState(

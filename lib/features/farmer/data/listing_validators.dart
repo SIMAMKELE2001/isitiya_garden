@@ -36,16 +36,16 @@ abstract final class ListingValidators {
 
   static String? description(String? value) =>
       (value != null && value.trim().length > 600)
-          ? 'Keep this under 600 characters.'
-          : null;
+      ? 'Keep this under 600 characters.'
+      : null;
 
   static String? locationNote(String? value) =>
       (value != null && value.trim().length > 120)
-          ? 'Keep this under 120 characters.'
-          : null;
+      ? 'Keep this under 120 characters.'
+      : null;
 
   static String? about(String? value) =>
       (value != null && value.trim().length > 500)
-          ? 'Keep this under 500 characters.'
-          : null;
+      ? 'Keep this under 500 characters.'
+      : null;
 }

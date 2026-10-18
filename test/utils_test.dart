@@ -32,7 +32,10 @@ void main() {
     });
     test('an end date is mentioned', () {
       final until = DateTime.now().add(const Duration(days: 5));
-      expect(Format.availability(null, until), startsWith('Available now, until'));
+      expect(
+        Format.availability(null, until),
+        startsWith('Available now, until'),
+      );
     });
   });
 
@@ -40,11 +43,15 @@ void main() {
     test('today, yesterday and days ago', () {
       expect(Format.listed(DateTime.now()), 'Listed today');
       expect(
-        Format.listed(DateTime.now().subtract(const Duration(days: 1, hours: 1))),
+        Format.listed(
+          DateTime.now().subtract(const Duration(days: 1, hours: 1)),
+        ),
         'Listed yesterday',
       );
       expect(
-        Format.listed(DateTime.now().subtract(const Duration(days: 3, hours: 1))),
+        Format.listed(
+          DateTime.now().subtract(const Duration(days: 3, hours: 1)),
+        ),
         'Listed 3 days ago',
       );
     });

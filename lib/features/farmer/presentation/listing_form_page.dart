@@ -1,7 +1,9 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+
 import '../../../app/theme/app_colors.dart';
 import '../../../core/utils/format.dart';
 import '../../../core/widgets/app_text_field.dart';
@@ -18,7 +20,9 @@ import '../models/farmer_models.dart';
 /// Opens the Add produce form, or the Edit form when [existing] is given.
 void openListingForm(BuildContext context, {FarmerListing? existing}) {
   Navigator.of(context).push(
-    MaterialPageRoute<void>(builder: (_) => ListingFormPage(existing: existing)),
+    MaterialPageRoute<void>(
+      builder: (_) => ListingFormPage(existing: existing),
+    ),
   );
 }
 
@@ -36,16 +40,21 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
   final _formKey = GlobalKey<FormState>();
 
   late final _name = TextEditingController(text: widget.existing?.name);
-  late final _description =
-      TextEditingController(text: widget.existing?.description);
+  late final _description = TextEditingController(
+    text: widget.existing?.description,
+  );
   late final _quantity = TextEditingController(
-      text: widget.existing?.quantityLabel);
-  late final _price = TextEditingController(text: _priceText(widget.existing?.price));
+    text: widget.existing?.quantityLabel,
+  );
+  late final _price = TextEditingController(
+    text: _priceText(widget.existing?.price),
+  );
   late final _note = TextEditingController(text: widget.existing?.locationNote);
 
   late int? _categoryId = widget.existing?.categoryId;
   late int? _unitId = widget.existing?.unitId;
-  late int? _communityId = widget.existing?.communityId ??
+  late int? _communityId =
+      widget.existing?.communityId ??
       ref.read(currentProfileProvider).value?.communityId;
   late final Set<int> _buyerTypeIds = {...?widget.existing?.buyerTypeIds};
   late bool _negotiable = widget.existing?.isPriceNegotiable ?? false;
@@ -105,14 +114,19 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
     try {
       // maxWidth and imageQuality shrink the photo before upload,
       // which saves data on slow connections.
-      final file = await ImagePicker()
-          .pickImage(source: source, maxWidth: 1280, imageQuality: 80);
+      final file = await ImagePicker().pickImage(
+        source: source,
+        maxWidth: 1280,
+        imageQuality: 80,
+      );
       if (file != null && mounted) setState(() => _newImage = file);
     } catch (_) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Could not open the camera or gallery.'),
-        ));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Could not open the camera or gallery.'),
+          ),
+        );
       }
     }
   }
@@ -131,7 +145,9 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
       ),
     );
 
-    final existingUrl = ref.read(produceRepositoryProvider).imageUrl(_existingImagePath);
+    final existingUrl = ref
+        .read(produceRepositoryProvider)
+        .imageUrl(_existingImagePath);
     final Widget child;
     if (_newImage != null) {
       child = Image.file(File(_newImage!.path), fit: BoxFit.cover);
@@ -139,7 +155,8 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
       child = Image.network(
         existingUrl,
         fit: BoxFit.cover,
-        loadingBuilder: (context, c, progress) => progress == null ? c : placeholder,
+        loadingBuilder: (context, c, progress) =>
+            progress == null ? c : placeholder,
         errorBuilder: (context, error, stack) => placeholder,
       );
     } else {
@@ -183,12 +200,16 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
     final until = _until;
     String? dateError;
     if (until != null &&
-        DateTime(until.year, until.month, until.day)
-            .isBefore(DateTime(_from.year, _from.month, _from.day))) {
+        DateTime(
+          until.year,
+          until.month,
+          until.day,
+        ).isBefore(DateTime(_from.year, _from.month, _from.day))) {
       dateError = 'The end date cannot be before the start date.';
     }
-    final typesError =
-        _buyerTypeIds.isEmpty ? 'Choose at least one buyer type.' : null;
+    final typesError = _buyerTypeIds.isEmpty
+        ? 'Choose at least one buyer type.'
+        : null;
     setState(() {
       _dateError = dateError;
       _typesError = typesError;
@@ -232,7 +253,9 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
         description: description.isEmpty ? null : description,
         quantity: ListingValidators.parseNumber(_quantity.text)!,
         unitId: _unitId!,
-        price: priceText.isEmpty ? null : ListingValidators.parseNumber(priceText),
+        price: priceText.isEmpty
+            ? null
+            : ListingValidators.parseNumber(priceText),
         isPriceNegotiable: _negotiable,
         status: _status,
         availableFrom: _from,
@@ -263,14 +286,17 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
         );
       } else {
         navigator.pop();
-        messenger.showSnackBar(const SnackBar(content: Text('Listing updated.')));
+        messenger.showSnackBar(
+          const SnackBar(content: Text('Listing updated.')),
+        );
       }
     } catch (_) {
       // If the photo went up but saving failed, do not leave it behind.
       if (uploaded != null) await repo.removeImageQuietly(uploaded);
       if (mounted) {
-        setState(() => _error =
-            'Something went wrong. Please try again. Your details are still here.');
+        setState(
+          () => _error = 'Something went wrong. Please try again. Your details are still here.',
+        );
       }
     } finally {
       if (mounted) {
@@ -308,7 +334,8 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
                     icon: const Icon(Icons.photo_camera_outlined),
                     label: Text(hasPhoto ? 'Change photo' : 'Add a photo'),
                     style: OutlinedButton.styleFrom(
-                        minimumSize: const Size.fromHeight(48)),
+                      minimumSize: const Size.fromHeight(48),
+                    ),
                   ),
                 ),
                 if (hasPhoto) ...[
@@ -317,9 +344,9 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
                     onPressed: _busy
                         ? null
                         : () => setState(() {
-                              _newImage = null;
-                              _existingImagePath = null;
-                            }),
+                            _newImage = null;
+                            _existingImagePath = null;
+                          }),
                     child: const Text('Remove'),
                   ),
                 ],
@@ -364,8 +391,9 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
                           label: 'Quantity',
                           hint: 'e.g. 20',
                           controller: _quantity,
-                          keyboardType:
-                              const TextInputType.numberWithOptions(decimal: true),
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
                           textInputAction: TextInputAction.next,
                           validator: ListingValidators.quantity,
                         ),
@@ -389,17 +417,22 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
                     label: 'Price in rand (R)',
                     hint: 'e.g. 12 or 12.50',
                     controller: _price,
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
                     textInputAction: TextInputAction.next,
                     validator: (v) =>
                         ListingValidators.price(v, isRequired: !_negotiable),
                   ),
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,
-                    title: const Text('Price is negotiable',
-                        style: TextStyle(fontWeight: FontWeight.w700)),
-                    subtitle: const Text('Buyers can talk to you about the price.'),
+                    title: const Text(
+                      'Price is negotiable',
+                      style: TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                    subtitle: const Text(
+                      'Buyers can talk to you about the price.',
+                    ),
                     value: _negotiable,
                     onChanged: (v) => setState(() => _negotiable = v),
                   ),
@@ -429,8 +462,10 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
                       padding: EdgeInsets.only(top: 6),
                       child: Align(
                         alignment: Alignment.centerLeft,
-                        child: Text('Unavailable produce is hidden from buyers.',
-                            style: TextStyle(color: AppColors.grey)),
+                        child: Text(
+                          'Unavailable produce is hidden from buyers.',
+                          style: TextStyle(color: AppColors.grey),
+                        ),
                       ),
                     ),
                   const SizedBox(height: 16),
@@ -462,10 +497,13 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
                       padding: const EdgeInsets.only(top: 6),
                       child: Align(
                         alignment: Alignment.centerLeft,
-                        child: Text(_dateError!,
-                            style: const TextStyle(
-                                color: AppColors.error,
-                                fontWeight: FontWeight.w600)),
+                        child: Text(
+                          _dateError!,
+                          style: const TextStyle(
+                            color: AppColors.error,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
                     ),
                   const SizedBox(height: 16),
@@ -490,11 +528,15 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
                     child: Text('Who is this produce for?', style: heading),
                   ),
                   const SizedBox(height: 6),
-                  ref.watch(buyerTypesProvider).when(
+                  ref
+                      .watch(buyerTypesProvider)
+                      .when(
                         loading: () => const LinearProgressIndicator(),
                         error: (_, _) => TextButton(
                           onPressed: () => ref.invalidate(buyerTypesProvider),
-                          child: const Text('Could not load buyer types. Tap to try again.'),
+                          child: const Text(
+                            'Could not load buyer types. Tap to try again.',
+                          ),
                         ),
                         data: (types) => Align(
                           alignment: Alignment.centerLeft,
@@ -522,10 +564,13 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
                       padding: const EdgeInsets.only(top: 6),
                       child: Align(
                         alignment: Alignment.centerLeft,
-                        child: Text(_typesError!,
-                            style: const TextStyle(
-                                color: AppColors.error,
-                                fontWeight: FontWeight.w600)),
+                        child: Text(
+                          _typesError!,
+                          style: const TextStyle(
+                            color: AppColors.error,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
                     ),
                 ],
@@ -546,7 +591,9 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
                           width: 22,
                           height: 22,
                           child: CircularProgressIndicator(
-                              strokeWidth: 3, color: Colors.white),
+                            strokeWidth: 3,
+                            color: Colors.white,
+                          ),
                         ),
                         const SizedBox(width: 12),
                         Text(_stage ?? 'Saving...'),
@@ -580,11 +627,11 @@ class _DateField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label,
-            style: Theme.of(context)
-                .textTheme
-                .titleSmall
-                ?.copyWith(fontWeight: FontWeight.w700)),
+        Text(
+          label,
+          style: Theme.of(context).textTheme.titleSmall
+              ?.copyWith(fontWeight: FontWeight.w700),
+        ),
         const SizedBox(height: 6),
         InkWell(
           borderRadius: BorderRadius.circular(12),
@@ -602,8 +649,9 @@ class _DateField extends StatelessWidget {
             child: Text(
               value ?? 'Not set',
               style: TextStyle(
-                  fontSize: 16,
-                  color: value == null ? AppColors.grey : AppColors.ink),
+                fontSize: 16,
+                color: value == null ? AppColors.grey : AppColors.ink,
+              ),
             ),
           ),
         ),
@@ -628,10 +676,14 @@ class ListingSuccessPage extends ConsumerWidget {
             children: [
               const Icon(Icons.check_circle, size: 96, color: AppColors.leaf),
               const SizedBox(height: 20),
-              Text('Produce listed successfully',
-                  textAlign: TextAlign.center,
-                  style: text.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w800, color: AppColors.forest)),
+              Text(
+                'Produce listed successfully',
+                textAlign: TextAlign.center,
+                style: text.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.forest,
+                ),
+              ),
               const SizedBox(height: 8),
               Text(
                 'Your produce has been listed successfully. Nearby buyers can now see it.',
@@ -649,7 +701,9 @@ class ListingSuccessPage extends ConsumerWidget {
               const SizedBox(height: 10),
               OutlinedButton(
                 onPressed: () => Navigator.of(context).pushReplacement(
-                  MaterialPageRoute<void>(builder: (_) => const ListingFormPage()),
+                  MaterialPageRoute<void>(
+                    builder: (_) => const ListingFormPage(),
+                  ),
                 ),
                 child: const Text('Add another'),
               ),

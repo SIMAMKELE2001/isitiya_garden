@@ -6,17 +6,17 @@ enum AvailabilityStatus {
 
   /// Converts the text stored in the database into an enum value.
   static AvailabilityStatus fromDb(String value) => switch (value) {
-        'low' => AvailabilityStatus.low,
-        'unavailable' => AvailabilityStatus.unavailable,
-        _ => AvailabilityStatus.available,
-      };
+    'low' => AvailabilityStatus.low,
+    'unavailable' => AvailabilityStatus.unavailable,
+    _ => AvailabilityStatus.available,
+  };
 
   /// Words shown to the user. Never colour alone, always text as well.
   String get label => switch (this) {
-        AvailabilityStatus.available => 'Available',
-        AvailabilityStatus.low => 'Low availability',
-        AvailabilityStatus.unavailable => 'Unavailable',
-      };
+    AvailabilityStatus.available => 'Available',
+    AvailabilityStatus.low => 'Low availability',
+    AvailabilityStatus.unavailable => 'Unavailable',
+  };
 }
 
 /// One row of the `active_listings` view, as a Dart object.
@@ -82,28 +82,28 @@ class Produce {
 
   /// Builds a Produce from the map Supabase returns for one row.
   factory Produce.fromJson(Map<String, dynamic> json) => Produce(
-        id: json['id'] as String,
-        name: json['name'] as String,
-        category: json['category'] as String,
-        quantity: (json['quantity'] as num).toDouble(),
-        unit: json['unit'] as String,
-        price: (json['price'] as num?)?.toDouble(),
-        isPriceNegotiable: json['is_price_negotiable'] as bool,
-        status: AvailabilityStatus.fromDb(json['availability_status'] as String),
-        community: json['community'] as String,
-        farmerName: json['farmer_name'] as String,
-        description: json['description'] as String?,
-        imagePath: json['image_path'] as String?,
-        farmName: json['farm_name'] as String?,
-        farmerPhone: json['farmer_phone'] as String?,
-        whatsappNumber: json['whatsapp_number'] as String?,
-        buyerTypes: [
-          for (final t in (json['buyer_types'] as List<dynamic>? ?? const []))
-            t as String,
-        ],
-        availableFrom: _date(json['available_from']),
-        availableUntil: _date(json['available_until']),
-        locationNote: json['location_note'] as String?,
-        createdAt: _date(json['created_at']),
-      );
+    id: json['id'] as String,
+    name: json['name'] as String,
+    category: json['category'] as String,
+    quantity: (json['quantity'] as num).toDouble(),
+    unit: json['unit'] as String,
+    price: (json['price'] as num?)?.toDouble(),
+    isPriceNegotiable: json['is_price_negotiable'] as bool,
+    status: AvailabilityStatus.fromDb(json['availability_status'] as String),
+    community: json['community'] as String,
+    farmerName: json['farmer_name'] as String,
+    description: json['description'] as String?,
+    imagePath: json['image_path'] as String?,
+    farmName: json['farm_name'] as String?,
+    farmerPhone: json['farmer_phone'] as String?,
+    whatsappNumber: json['whatsapp_number'] as String?,
+    buyerTypes: [
+      for (final t in (json['buyer_types'] as List<dynamic>? ?? const []))
+        t as String,
+    ],
+    availableFrom: _date(json['available_from']),
+    availableUntil: _date(json['available_until']),
+    locationNote: json['location_note'] as String?,
+    createdAt: _date(json['created_at']),
+  );
 }

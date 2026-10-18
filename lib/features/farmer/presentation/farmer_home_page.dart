@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../app/theme/app_colors.dart';
 import '../../../core/widgets/app_logo.dart';
 import '../../../core/widgets/state_views.dart';
@@ -37,15 +38,25 @@ class FarmerHomePage extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
           children: [
-            Text('Molo, ${profile?.firstName ?? ''}',
-                style: text.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.w800, color: AppColors.forest)),
-            Text('Let buyers know what you have today.',
-                style: text.titleMedium?.copyWith(color: AppColors.grey)),
+            Text(
+              'Molo, ${profile?.firstName ?? ''}',
+              style: text.headlineMedium?.copyWith(
+                fontWeight: FontWeight.w800,
+                color: AppColors.forest,
+              ),
+            ),
+            Text(
+              'Let buyers know what you have today.',
+              style: text.titleMedium?.copyWith(color: AppColors.grey),
+            ),
             const SizedBox(height: 16),
             listings.when(
               loading: () => const Column(
-                children: [SkeletonCard(), SizedBox(height: 14), SkeletonCard()],
+                children: [
+                  SkeletonCard(),
+                  SizedBox(height: 14),
+                  SkeletonCard(),
+                ],
               ),
               error: (e, _) => ErrorState(
                 message: 'Something went wrong. Please try again.',
@@ -73,20 +84,28 @@ class FarmerHomePage extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('$visible',
-                              style: text.displayMedium?.copyWith(
-                                  color: Colors.white, fontWeight: FontWeight.w800)),
+                          Text(
+                            '$visible',
+                            style: text.displayMedium?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
                           Text(
                             visible == 1
                                 ? 'listing visible to buyers'
                                 : 'listings visible to buyers',
-                            style: text.titleMedium?.copyWith(color: Colors.white),
+                            style: text.titleMedium?.copyWith(
+                              color: Colors.white,
+                            ),
                           ),
                           if (low > 0 || unavailable > 0) ...[
                             const SizedBox(height: 6),
                             Text(
                               '$low low availability · $unavailable unavailable',
-                              style: text.bodyMedium?.copyWith(color: Colors.white70),
+                              style: text.bodyMedium?.copyWith(
+                                color: Colors.white70,
+                              ),
                             ),
                           ],
                           const SizedBox(height: 14),
@@ -106,9 +125,12 @@ class FarmerHomePage extends ConsumerWidget {
                     Row(
                       children: [
                         Expanded(
-                          child: Text('Your active listings',
-                              style: text.titleLarge
-                                  ?.copyWith(fontWeight: FontWeight.w800)),
+                          child: Text(
+                            'Your active listings',
+                            style: text.titleLarge?.copyWith(
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
                         ),
                         if (active.length > 3)
                           TextButton(
@@ -123,7 +145,8 @@ class FarmerHomePage extends ConsumerWidget {
                       EmptyState(
                         icon: Icons.eco_outlined,
                         title: 'No produce available yet.',
-                        message: 'Add what you have and nearby buyers can find you.',
+                        message:
+                            'Add what you have and nearby buyers can find you.',
                         actionLabel: 'Add produce',
                         onAction: () => openListingForm(context),
                       )
