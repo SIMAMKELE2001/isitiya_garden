@@ -35,7 +35,14 @@ jobs:
         run: flutter pub get
 
       - name: Build Flutter Web
-        run: flutter build web --release --base-href=/isitiya_garden/ "--dart-define=SUPABASE_URL=${{ vars.SUPABASE_URL }}" "--dart-define=SUPABASE_KEY=${{ vars.SUPABASE_KEY }}"
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ vars.SUPABASE_KEY }}
+        run: |
+          echo "Checking Supabase configuration..."
+          test -n "$SUPABASE_URL"
+          test -n "$SUPABASE_KEY"
+          flutter build web --release --base-href=/isitiya_garden/ --dart-define="SUPABASE_URL=$SUPABASE_URL" --dart-define="SUPABASE_KEY=$SUPABASE_KEY"
 
       - name: Upload web build
         uses: actions/upload-pages-artifact@v3
