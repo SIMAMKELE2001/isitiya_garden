@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../app/theme/app_colors.dart';
 import '../../features/produce/models/produce.dart';
 import 'status_badge.dart';
@@ -74,10 +73,12 @@ class ProduceCard extends StatelessWidget {
                             color: AppColors.grey,
                           ),
                           const SizedBox(width: 4),
-                          Text(
-                            produce.community,
-                            style: text.bodyMedium?.copyWith(
-                              color: AppColors.grey,
+                          Expanded(
+                            child: Text(
+                              produce.locationLabel,
+                              style: text.bodyMedium?.copyWith(
+                                color: AppColors.grey,
+                              ),
                             ),
                           ),
                         ],

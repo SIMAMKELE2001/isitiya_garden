@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../../app/theme/app_colors.dart';
 import '../../../core/widgets/info_row.dart';
 import '../../auth/data/auth_providers.dart';
-import '../../auth/models/user_profile.dart';
+import '../../location/data/location_repository.dart';
 import '../../farmer/data/farmer_providers.dart';
 import 'edit_farmer_profile_page.dart';
 
@@ -16,15 +15,13 @@ class FarmerProfilePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profile = ref.watch(currentProfileProvider).value;
     final details = ref.watch(farmerDetailsProvider).value;
-    final communities =
-        ref.watch(communitiesProvider).value ?? const <LookupItem>[];
+    final place = ref.watch(placeDetailsProvider(profile?.communityId)).value;
     final email = ref.watch(supabaseClientProvider).auth.currentUser?.email;
     final text = Theme.of(context).textTheme;
 
-    String communityName = 'Not set';
-    for (final c in communities) {
-      if (c.id == profile?.communityId) communityName = c.name;
-    }
+    final communityName = place == null
+        ? 'Not set'
+        : '${place.name}, ${place.areaName}, ${place.provinceName}';
 
     return Scaffold(
       appBar: AppBar(title: const Text('Profile')),

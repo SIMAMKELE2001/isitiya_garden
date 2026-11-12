@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../../app/theme/app_colors.dart';
 import '../../../core/utils/format.dart';
 import '../../../core/widgets/info_row.dart';
@@ -34,8 +33,8 @@ class ProduceDetailPage extends ConsumerWidget {
     final imageUrl = ref.read(produceRepositoryProvider).imageUrl(p.imagePath);
     final myType = ref.watch(buyerDetailsProvider).value?.buyerTypeName;
     final location = p.locationNote == null || p.locationNote!.trim().isEmpty
-        ? p.community
-        : '${p.community} · ${p.locationNote}';
+        ? p.locationLabel
+        : '${p.locationLabel} · ${p.locationNote}';
 
     return Scaffold(
       appBar: AppBar(title: Text(p.name)),
@@ -272,7 +271,9 @@ class _Suitability extends StatelessWidget {
         const SizedBox(width: 8),
         Expanded(
           child: Text(
-            suits ? 'This listing is aimed at buyers like you ($myType).' : 'This listing is aimed at the buyer types above. You can still contact the farmer.',
+            suits
+                ? 'This listing is aimed at buyers like you ($myType).'
+                : 'This listing is aimed at the buyer types above. You can still contact the farmer.',
             style: const TextStyle(fontWeight: FontWeight.w600),
           ),
         ),

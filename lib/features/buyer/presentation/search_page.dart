@@ -1,20 +1,20 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../../app/theme/app_colors.dart';
+import '../../../core/widgets/app_dropdown_field.dart';
 import '../../../core/widgets/choice_pill.dart';
 import '../../../core/widgets/produce_card.dart';
 import '../../../core/widgets/state_views.dart';
-import '../../auth/data/auth_providers.dart';
 import '../../auth/models/user_profile.dart';
+import '../../location/data/location_repository.dart';
+import '../../location/models/location_models.dart';
 import '../../produce/data/produce_repository.dart';
 import '../../produce/models/produce.dart';
 import '../../produce/presentation/produce_detail_page.dart';
 import '../data/buyer_providers.dart';
 
-/// Search tab: text search plus category, availability and community filters.
+/// Search tab: text search plus category, availability and location filters.
 class SearchPage extends ConsumerStatefulWidget {
   const SearchPage({super.key});
 
@@ -53,8 +53,6 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     final notifier = ref.read(searchFiltersProvider.notifier);
     final results = ref.watch(searchResultsProvider);
     final categories = ref.watch(categoriesProvider).value ?? const <String>[];
-    final communities =
-        ref.watch(communitiesProvider).value ?? const <LookupItem>[];
     final repo = ref.read(produceRepositoryProvider);
     final text = Theme.of(context).textTheme;
 
@@ -68,7 +66,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
             onChanged: _onChanged,
             textInputAction: TextInputAction.search,
             decoration: const InputDecoration(
-              hintText: 'Search spinach, maize, eggs...',
+              hintText: 'Search produce, farmer or place...',
               prefixIcon: Icon(Icons.search),
             ),
           ),
@@ -110,24 +108,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                 ),
             ],
           ),
-          _FilterRow(
-            title: 'Community',
-            pills: [
-              ChoicePill(
-                label: 'Any',
-                selected: filters.community == null,
-                onTap: () => notifier.setCommunity(null),
-              ),
-              for (final c in communities)
-                ChoicePill(
-                  label: c.name,
-                  selected: filters.community == c.name,
-                  onTap: () => notifier.setCommunity(
-                    filters.community == c.name ? null : c.name,
-                  ),
-                ),
-            ],
-          ),
+          _LocationFilters(filters: filters),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -204,8 +185,9 @@ class _FilterRow extends StatelessWidget {
       children: [
         Text(
           title,
-          style: Theme.of(context).textTheme.titleSmall
-              ?.copyWith(fontWeight: FontWeight.w700),
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
         ),
         const SizedBox(height: 6),
         SizedBox(
@@ -222,6 +204,71 @@ class _FilterRow extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 6),
+      ],
+    );
+  }
+}
+
+/// Province and district drop-downs for the whole of South Africa.
+class _LocationFilters extends ConsumerWidget {
+  const _LocationFilters({required this.filters});
+
+  final SearchFilters filters;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final notifier = ref.read(searchFiltersProvider.notifier);
+    final provinces =
+        ref.watch(provincesProvider).value ?? const <LookupItem>[];
+    final areas =
+        ref.watch(areasProvider(filters.provinceId)).value ?? const <Area>[];
+
+    // A drop-down asserts if its start value is not in its list, which
+    // can happen briefly while a list is still loading.
+    final provinceValue = provinces.any((p) => p.id == filters.provinceId)
+        ? filters.provinceId
+        : null;
+    final areaValue = areas.any((a) => a.id == filters.areaId)
+        ? filters.areaId
+        : null;
+
+    return Column(
+      children: [
+        AppDropdownField<int?>(
+          // A new key makes the drop-down show the new value after
+          // "Clear filters" or a change made elsewhere.
+          key: ValueKey('province-${filters.provinceId}'),
+          label: 'Province',
+          initialValue: provinceValue,
+          items: [
+            const DropdownMenuItem<int?>(
+              value: null,
+              child: Text('All provinces'),
+            ),
+            for (final p in provinces)
+              DropdownMenuItem<int?>(value: p.id, child: Text(p.name)),
+          ],
+          onChanged: notifier.setProvince,
+        ),
+        const SizedBox(height: 12),
+        AppDropdownField<int?>(
+          key: ValueKey('area-${filters.provinceId}-${filters.areaId}'),
+          label: 'District or metro',
+          initialValue: areaValue,
+          items: [
+            const DropdownMenuItem<int?>(
+              value: null,
+              child: Text('All districts'),
+            ),
+            for (final a in areas)
+              DropdownMenuItem<int?>(
+                value: a.id,
+                child: Text(a.name, overflow: TextOverflow.ellipsis),
+              ),
+          ],
+          onChanged: notifier.setArea,
+        ),
+        const SizedBox(height: 12),
       ],
     );
   }

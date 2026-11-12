@@ -1,9 +1,7 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../../../app/theme/app_colors.dart';
 import '../../../core/utils/format.dart';
 import '../../../core/widgets/app_text_field.dart';
@@ -11,6 +9,9 @@ import '../../../core/widgets/choice_pill.dart';
 import '../../../core/widgets/form_error_box.dart';
 import '../../auth/data/auth_providers.dart';
 import '../../auth/presentation/lookup_dropdown.dart';
+import '../../location/data/location_repository.dart';
+import '../../location/models/location_models.dart';
+import '../../location/presentation/place_picker.dart';
 import '../../produce/data/produce_repository.dart';
 import '../../produce/models/produce.dart';
 import '../data/farmer_providers.dart';
@@ -53,9 +54,7 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
 
   late int? _categoryId = widget.existing?.categoryId;
   late int? _unitId = widget.existing?.unitId;
-  late int? _communityId =
-      widget.existing?.communityId ??
-      ref.read(currentProfileProvider).value?.communityId;
+  PlaceSelection _place = const PlaceSelection();
   late final Set<int> _buyerTypeIds = {...?widget.existing?.buyerTypeIds};
   late bool _negotiable = widget.existing?.isPriceNegotiable ?? false;
   late AvailabilityStatus _status =
@@ -72,6 +71,11 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
   String? _typesError;
 
   bool get _isEditing => widget.existing != null;
+
+  /// The place to show already chosen: the listing's own, or the farmer's.
+  int? get _initialCommunityId =>
+      widget.existing?.communityId ??
+      ref.read(currentProfileProvider).value?.communityId;
 
   /// 12.0 shows as "12", 12.5 as "12.5".
   static String? _priceText(double? p) =>
@@ -244,6 +248,10 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
       }
 
       setState(() => _stage = 'Saving listing...');
+      // A new place is created first, then we have an id to save.
+      final communityId = await ref
+          .read(locationRepositoryProvider)
+          .resolve(_place);
       final priceText = _price.text.trim();
       final description = _description.text.trim();
       final note = _note.text.trim();
@@ -260,7 +268,7 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
         status: _status,
         availableFrom: _from,
         availableUntil: _until,
-        communityId: _communityId!,
+        communityId: communityId,
         locationNote: note.isEmpty ? null : note,
         imagePath: imagePath,
         buyerTypeIds: _buyerTypeIds,
@@ -277,6 +285,7 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
         }
       }
 
+      ref.invalidate(placesProvider);
       ref.invalidate(myListingsProvider);
       if (!mounted) return;
 
@@ -295,7 +304,8 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
       if (uploaded != null) await repo.removeImageQuietly(uploaded);
       if (mounted) {
         setState(
-          () => _error = 'Something went wrong. Please try again. Your details are still here.',
+          () => _error =
+              'Something went wrong. Please try again. Your details are still here.',
         );
       }
     } finally {
@@ -507,13 +517,9 @@ class _ListingFormPageState extends ConsumerState<ListingFormPage> {
                       ),
                     ),
                   const SizedBox(height: 16),
-                  LookupDropdown(
-                    label: 'Community',
-                    hint: 'Where is the produce?',
-                    items: ref.watch(communitiesProvider),
-                    initialValue: _communityId,
-                    onChanged: (v) => _communityId = v,
-                    onRetry: () => ref.invalidate(communitiesProvider),
+                  PlacePicker(
+                    initialCommunityId: _initialCommunityId,
+                    onChanged: (selection) => _place = selection,
                   ),
                   const SizedBox(height: 16),
                   AppTextField(
@@ -629,8 +635,9 @@ class _DateField extends StatelessWidget {
       children: [
         Text(
           label,
-          style: Theme.of(context).textTheme.titleSmall
-              ?.copyWith(fontWeight: FontWeight.w700),
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
         ),
         const SizedBox(height: 6),
         InkWell(

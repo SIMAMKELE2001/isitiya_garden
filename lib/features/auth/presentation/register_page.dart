@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../../app/theme/app_colors.dart';
 import '../../../core/utils/validators.dart';
 import '../../../core/widgets/app_dropdown_field.dart';
@@ -8,6 +7,8 @@ import '../../../core/widgets/app_text_field.dart';
 import '../../../core/widgets/form_error_box.dart';
 import '../data/auth_errors.dart';
 import '../data/auth_providers.dart';
+import '../../location/models/location_models.dart';
+import '../../location/presentation/place_picker.dart';
 import '../models/user_profile.dart';
 
 /// Step 1: choose Farmer or Buyer. Step 2: the matching form.
@@ -28,7 +29,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   final _confirm = TextEditingController();
 
   UserRole? _role;
-  int? _communityId;
+  PlaceSelection _place = const PlaceSelection();
   int? _buyerTypeId;
   bool _busy = false;
   bool _hidePassword = true;
@@ -59,7 +60,9 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             role: _role!,
             fullName: _name.text,
             phone: _phone.text,
-            communityId: _communityId!,
+            communityId: _place.communityId,
+            areaId: _place.areaId,
+            placeName: _place.newPlaceName,
             farmName: _role == UserRole.farmer ? _farm.text : null,
             buyerTypeId: _role == UserRole.buyer ? _buyerTypeId : null,
           );
@@ -132,8 +135,10 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
       children: [
         Text(
           'Who are you?',
-          style: Theme.of(context).textTheme.headlineSmall
-              ?.copyWith(fontWeight: FontWeight.w800, color: AppColors.forest),
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.w800,
+            color: AppColors.forest,
+          ),
         ),
         const SizedBox(height: 16),
         _RoleCard(
@@ -188,13 +193,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                 validator: Validators.phone,
               ),
               const SizedBox(height: 16),
-              _lookupDropdown(
-                label: 'Community',
-                hint: 'Choose your community',
-                items: ref.watch(communitiesProvider),
-                onChanged: (v) => _communityId = v,
-                onRetry: () => ref.invalidate(communitiesProvider),
-              ),
+              PlacePicker(onChanged: (selection) => _place = selection),
               const SizedBox(height: 16),
               if (isFarmer)
                 AppTextField(

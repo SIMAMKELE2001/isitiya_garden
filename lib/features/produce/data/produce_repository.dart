@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
 import '../../auth/data/auth_providers.dart';
 import '../models/produce.dart';
 
@@ -13,23 +12,34 @@ class ProduceRepository {
   /// Live listings, optionally narrowed by search text and filters
   /// (FR19, FR20, FR21). The `active_listings` view already hides inactive,
   /// unavailable and expired listings (NFR10).
+  ///
+  /// The search text matches the produce name, farmer, farm, town, district
+  /// or province, so "Qunu" or "Eastern Cape" work as well as "spinach".
   Future<List<Produce>> fetchActive({
     String? query,
     String? category,
-    String? community,
+    int? provinceId,
+    int? areaId,
     AvailabilityStatus? status,
   }) async {
     var request = _client.from('active_listings').select();
 
-    final text = query?.trim();
+    // Characters with a special meaning in a filter are replaced by spaces.
+    final text = query?.replaceAll(RegExp(r'[,()*%\\"]'), ' ').trim();
     if (text != null && text.isNotEmpty) {
-      request = request.ilike('name', '%$text%'); // case-insensitive "contains"
+      request = request.or(
+        'name.ilike.*$text*,farmer_name.ilike.*$text*,farm_name.ilike.*$text*,'
+        'community.ilike.*$text*,area.ilike.*$text*,province.ilike.*$text*',
+      );
     }
     if (category != null) {
       request = request.eq('category', category);
     }
-    if (community != null) {
-      request = request.eq('community', community);
+    if (provinceId != null) {
+      request = request.eq('province_id', provinceId);
+    }
+    if (areaId != null) {
+      request = request.eq('area_id', areaId);
     }
     if (status != null) {
       request = request.eq('availability_status', status.name);

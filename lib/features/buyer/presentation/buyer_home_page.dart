@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../../app/theme/app_colors.dart';
 import '../../../core/widgets/app_logo.dart';
 import '../../../core/widgets/choice_pill.dart';
 import '../../../core/widgets/produce_card.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../auth/data/auth_providers.dart';
-import '../../auth/models/user_profile.dart';
+import '../../location/data/location_repository.dart';
 import '../../produce/data/produce_repository.dart';
 import '../../produce/models/produce.dart';
 import '../../produce/presentation/produce_detail_page.dart';
@@ -22,16 +21,9 @@ class BuyerHomePage extends ConsumerWidget {
     final profile = ref.watch(currentProfileProvider).value;
     final listings = ref.watch(activeListingsProvider);
     final categories = ref.watch(categoriesProvider);
-    final communities =
-        ref.watch(communitiesProvider).value ?? const <LookupItem>[];
+    final myPlace = ref.watch(placeDetailsProvider(profile?.communityId)).value;
     final repo = ref.read(produceRepositoryProvider);
     final text = Theme.of(context).textTheme;
-
-    // The buyer's own community, so we can show nearby produce first.
-    String? myCommunity;
-    for (final c in communities) {
-      if (c.id == profile?.communityId) myCommunity = c.name;
-    }
 
     Widget cardFor(Produce p) => Padding(
       padding: const EdgeInsets.only(bottom: 14),
@@ -69,7 +61,9 @@ class BuyerHomePage extends ConsumerWidget {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  myCommunity ?? 'Eastern Cape',
+                  myPlace == null
+                      ? 'South Africa'
+                      : '${myPlace.name}, ${myPlace.provinceName}',
                   style: text.bodyMedium?.copyWith(color: AppColors.grey),
                 ),
               ],
@@ -146,26 +140,46 @@ class BuyerHomePage extends ConsumerWidget {
                     message: 'Check back soon. Farmers add produce every day.',
                   );
                 }
-                final nearby = myCommunity == null
-                    ? <Produce>[]
-                    : items.where((p) => p.community == myCommunity).toList();
-                final others = myCommunity == null
-                    ? items
-                    : items.where((p) => p.community != myCommunity).toList();
+                // Nearest first: the buyer's own place, then the same
+                // district, then the rest of South Africa.
+                final placeId = profile?.communityId;
+                final areaId = myPlace?.areaId;
+                final inPlace = items
+                    .where((p) => placeId != null && p.communityId == placeId)
+                    .toList();
+                final inArea = items
+                    .where(
+                      (p) =>
+                          areaId != null &&
+                          p.areaId == areaId &&
+                          p.communityId != placeId,
+                    )
+                    .toList();
+                final elsewhere = items
+                    .where((p) => !inPlace.contains(p) && !inArea.contains(p))
+                    .toList();
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (nearby.isNotEmpty) ...[
-                      _SectionTitle('Available in $myCommunity'),
-                      for (final p in nearby) cardFor(p),
-                    ],
-                    if (others.isNotEmpty) ...[
+                    if (inPlace.isNotEmpty) ...[
                       _SectionTitle(
-                        nearby.isEmpty
-                            ? 'Available near you'
-                            : 'Also available nearby',
+                        'Available in ${myPlace?.name ?? 'your place'}',
                       ),
-                      for (final p in others) cardFor(p),
+                      for (final p in inPlace) cardFor(p),
+                    ],
+                    if (inArea.isNotEmpty) ...[
+                      _SectionTitle(
+                        'Also in ${myPlace?.areaName ?? 'your district'}',
+                      ),
+                      for (final p in inArea) cardFor(p),
+                    ],
+                    if (elsewhere.isNotEmpty) ...[
+                      _SectionTitle(
+                        inPlace.isEmpty && inArea.isEmpty
+                            ? 'Available across South Africa'
+                            : 'Elsewhere in South Africa',
+                      ),
+                      for (final p in elsewhere) cardFor(p),
                     ],
                   ],
                 );
@@ -189,8 +203,9 @@ class _SectionTitle extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 10),
       child: Text(
         title,
-        style: Theme.of(context).textTheme.titleLarge
-            ?.copyWith(fontWeight: FontWeight.w800),
+        style: Theme.of(
+          context,
+        ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
       ),
     );
   }

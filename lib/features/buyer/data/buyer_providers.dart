@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../auth/data/auth_providers.dart';
 import '../../auth/models/user_profile.dart';
 import '../../produce/data/produce_repository.dart';
@@ -22,19 +21,22 @@ class SearchFilters {
   const SearchFilters({
     this.query = '',
     this.category,
-    this.community,
+    this.provinceId,
+    this.areaId,
     this.status,
   });
 
   final String query;
   final String? category;
-  final String? community;
+  final int? provinceId;
+  final int? areaId;
   final AvailabilityStatus? status;
 
   bool get isActive =>
       query.trim().isNotEmpty ||
       category != null ||
-      community != null ||
+      provinceId != null ||
+      areaId != null ||
       status != null;
 }
 
@@ -45,28 +47,42 @@ class SearchFiltersNotifier extends Notifier<SearchFilters> {
   void setQuery(String value) => state = SearchFilters(
     query: value,
     category: state.category,
-    community: state.community,
+    provinceId: state.provinceId,
+    areaId: state.areaId,
     status: state.status,
   );
 
   void setCategory(String? value) => state = SearchFilters(
     query: state.query,
     category: value,
-    community: state.community,
+    provinceId: state.provinceId,
+    areaId: state.areaId,
     status: state.status,
   );
 
-  void setCommunity(String? value) => state = SearchFilters(
+  /// Choosing another province clears the district, which belonged
+  /// to the old one.
+  void setProvince(int? value) => state = SearchFilters(
     query: state.query,
     category: state.category,
-    community: value,
+    provinceId: value,
+    areaId: null,
+    status: state.status,
+  );
+
+  void setArea(int? value) => state = SearchFilters(
+    query: state.query,
+    category: state.category,
+    provinceId: state.provinceId,
+    areaId: value,
     status: state.status,
   );
 
   void setStatus(AvailabilityStatus? value) => state = SearchFilters(
     query: state.query,
     category: state.category,
-    community: state.community,
+    provinceId: state.provinceId,
+    areaId: state.areaId,
     status: value,
   );
 
@@ -87,7 +103,8 @@ final searchResultsProvider = FutureProvider<List<Produce>>((ref) {
       .fetchActive(
         query: f.query,
         category: f.category,
-        community: f.community,
+        provinceId: f.provinceId,
+        areaId: f.areaId,
         status: f.status,
       );
 });

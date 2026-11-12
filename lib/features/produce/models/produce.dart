@@ -42,6 +42,11 @@ class Produce {
     this.availableUntil,
     this.locationNote,
     this.createdAt,
+    this.farmerId,
+    this.communityId,
+    this.areaId,
+    this.area,
+    this.province,
   });
 
   final String id;
@@ -64,6 +69,16 @@ class Produce {
   final DateTime? availableUntil;
   final String? locationNote;
   final DateTime? createdAt;
+  final String? farmerId;
+  final int? communityId;
+  final int? areaId;
+  final String? area;
+  final String? province;
+
+  /// "Qunu, Eastern Cape". The province matters now that places from
+  /// all of South Africa can appear side by side.
+  String get locationLabel =>
+      province == null ? community : '$community, $province';
 
   /// "40" instead of "40.0".
   String get quantityLabel =>
@@ -105,5 +120,10 @@ class Produce {
     availableUntil: _date(json['available_until']),
     locationNote: json['location_note'] as String?,
     createdAt: _date(json['created_at']),
+    farmerId: json['farmer_id'] as String?,
+    communityId: json['community_id'] as int?,
+    areaId: json['area_id'] as int?,
+    area: json['area'] as String?,
+    province: json['province'] as String?,
   );
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../../core/utils/validators.dart';
 import '../../../core/widgets/app_text_field.dart';
 import '../../../core/widgets/form_error_box.dart';
@@ -8,6 +7,9 @@ import '../../auth/data/auth_providers.dart';
 import '../../auth/models/user_profile.dart';
 import '../../auth/presentation/lookup_dropdown.dart';
 import '../../buyer/data/buyer_providers.dart';
+import '../../location/data/location_repository.dart';
+import '../../location/models/location_models.dart';
+import '../../location/presentation/place_picker.dart';
 
 /// Lets a buyer change their name, phone, community and buyer type.
 class EditBuyerProfilePage extends ConsumerStatefulWidget {
@@ -25,7 +27,7 @@ class _EditBuyerProfilePageState extends ConsumerState<EditBuyerProfilePage> {
   final _formKey = GlobalKey<FormState>();
   late final _name = TextEditingController(text: widget.profile.fullName);
   late final _phone = TextEditingController(text: widget.profile.phone);
-  late int? _communityId = widget.profile.communityId;
+  PlaceSelection _place = const PlaceSelection();
   late int? _buyerTypeId = widget.details?.buyerTypeId;
   bool _busy = false;
   String? _error;
@@ -46,16 +48,21 @@ class _EditBuyerProfilePageState extends ConsumerState<EditBuyerProfilePage> {
       _error = null;
     });
     try {
+      // A new place is created first, then we have an id to save.
+      final communityId = await ref
+          .read(locationRepositoryProvider)
+          .resolve(_place);
       await ref
           .read(authRepositoryProvider)
           .updateBuyerProfile(
             userId: widget.profile.id,
             fullName: _name.text,
             phone: _phone.text,
-            communityId: _communityId!,
+            communityId: communityId,
             buyerTypeId: _buyerTypeId!,
           );
       // Reload the profile everywhere it is shown.
+      ref.invalidate(placesProvider);
       ref.invalidate(currentProfileProvider);
       ref.invalidate(buyerDetailsProvider);
       if (!mounted) return;
@@ -99,13 +106,9 @@ class _EditBuyerProfilePageState extends ConsumerState<EditBuyerProfilePage> {
                     validator: Validators.phone,
                   ),
                   const SizedBox(height: 16),
-                  LookupDropdown(
-                    label: 'Community',
-                    hint: 'Choose your community',
-                    items: ref.watch(communitiesProvider),
-                    initialValue: _communityId,
-                    onChanged: (v) => _communityId = v,
-                    onRetry: () => ref.invalidate(communitiesProvider),
+                  PlacePicker(
+                    initialCommunityId: widget.profile.communityId,
+                    onChanged: (selection) => _place = selection,
                   ),
                   const SizedBox(height: 16),
                   LookupDropdown(

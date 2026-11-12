@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../../core/utils/validators.dart';
 import '../../../core/widgets/app_text_field.dart';
 import '../../../core/widgets/form_error_box.dart';
 import '../../auth/data/auth_providers.dart';
 import '../../auth/models/user_profile.dart';
-import '../../auth/presentation/lookup_dropdown.dart';
 import '../../farmer/data/farmer_providers.dart';
 import '../../farmer/data/listing_validators.dart';
 import '../../farmer/models/farmer_models.dart';
+import '../../location/data/location_repository.dart';
+import '../../location/models/location_models.dart';
+import '../../location/presentation/place_picker.dart';
 
 /// Lets a farmer edit the details buyers see (FR04).
 class EditFarmerProfilePage extends ConsumerStatefulWidget {
@@ -32,7 +33,7 @@ class _EditFarmerProfilePageState extends ConsumerState<EditFarmerProfilePage> {
     text: widget.details?.whatsappNumber,
   );
   late final _about = TextEditingController(text: widget.details?.about);
-  late int? _communityId = widget.profile.communityId;
+  PlaceSelection _place = const PlaceSelection();
   bool _busy = false;
   String? _error;
 
@@ -55,18 +56,23 @@ class _EditFarmerProfilePageState extends ConsumerState<EditFarmerProfilePage> {
     try {
       final whatsapp = _whatsapp.text.trim();
       final about = _about.text.trim();
+      // A new place is created first, then we have an id to save.
+      final communityId = await ref
+          .read(locationRepositoryProvider)
+          .resolve(_place);
       await ref
           .read(farmerRepositoryProvider)
           .updateFarmerProfile(
             userId: widget.profile.id,
             fullName: _name.text,
             phone: _phone.text,
-            communityId: _communityId!,
+            communityId: communityId,
             farmName: _farm.text,
             // The database refuses empty text here, so send null instead.
             whatsappNumber: whatsapp.isEmpty ? null : whatsapp,
             about: about.isEmpty ? null : about,
           );
+      ref.invalidate(placesProvider);
       ref.invalidate(currentProfileProvider);
       ref.invalidate(farmerDetailsProvider);
       if (!mounted) return;
@@ -128,13 +134,9 @@ class _EditFarmerProfilePageState extends ConsumerState<EditFarmerProfilePage> {
                         : Validators.phone(v),
                   ),
                   const SizedBox(height: 16),
-                  LookupDropdown(
-                    label: 'Community',
-                    hint: 'Choose your community',
-                    items: ref.watch(communitiesProvider),
-                    initialValue: _communityId,
-                    onChanged: (v) => _communityId = v,
-                    onRetry: () => ref.invalidate(communitiesProvider),
+                  PlacePicker(
+                    initialCommunityId: widget.profile.communityId,
+                    onChanged: (selection) => _place = selection,
                   ),
                   const SizedBox(height: 16),
                   AppTextField(

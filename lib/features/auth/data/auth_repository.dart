@@ -1,5 +1,4 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-
 import '../models/user_profile.dart';
 
 /// The only place that talks to Supabase about accounts.
@@ -25,7 +24,9 @@ class AuthRepository {
     required UserRole role,
     required String fullName,
     required String phone,
-    required int communityId,
+    int? communityId,
+    int? areaId,
+    String? placeName,
     String? farmName,
     int? buyerTypeId,
   }) async {
@@ -36,7 +37,11 @@ class AuthRepository {
         'role': role.name,
         'full_name': fullName.trim(),
         'phone': phone.trim(),
-        'community_id': communityId,
+        // Either an existing place, or a district plus a new place name
+        // (the database trigger creates the place).
+        'community_id': ?communityId,
+        'area_id': ?areaId,
+        'place_name': ?placeName,
         'farm_name': ?farmName?.trim(),
         'buyer_type_id': ?buyerTypeId,
       },
