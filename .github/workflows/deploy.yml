@@ -1,3 +1,4 @@
+
 name: Deploy Flutter Web to GitHub Pages
 
 on:
@@ -34,11 +35,7 @@ jobs:
         run: flutter pub get
 
       - name: Build Flutter Web
-        run: >
-          flutter build web --release
-            --base-href=/isitiya_garden/
-            --dart-define=SUPABASE_URL="${{ vars.SUPABASE_URL }}" \
-            --dart-define=SUPABASE_KEY="${{ vars.SUPABASE_KEY }}"
+        run: flutter build web --release --base-href=/isitiya_garden/ --dart-define=SUPABASE_URL=${{ vars.SUPABASE_URL }} --dart-define=SUPABASE_KEY=${{ vars.SUPABASE_KEY }}
 
       - name: Upload web build
         uses: actions/upload-pages-artifact@v3
